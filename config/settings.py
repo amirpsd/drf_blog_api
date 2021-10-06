@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # my app
     'blog.apps.BlogConfig',
     'account.apps.AccountConfig',
+    'blog_category.apps.BlogCategoryConfig',
     # install app
     'rest_framework',
 ]
