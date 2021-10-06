@@ -7,6 +7,7 @@ class Category(models.Model):
         'self',
         null=True,
         default=None,
+        blank=True,
         on_delete=models.CASCADE,
         related_name='children',
     )
