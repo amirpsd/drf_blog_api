@@ -4,5 +4,5 @@ from django.db.models import Manager
 
 class BlogManager(Manager):
     def publish(self):
-        return self.get_gueryset().filter(status='p')
+        return self.filter(status='p')
 

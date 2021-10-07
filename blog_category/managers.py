@@ -4,5 +4,5 @@ from django.db.models import Manager
 
 class CategoryManager(Manager):
     def publish(self):
-        return self.get_gueryset().filter(status=True)
+        return self.filter(status=True)
 
