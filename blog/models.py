@@ -38,7 +38,7 @@ class Blog(models.Model):
     publish = models.DateTimeField(default=timezone.now)
     create = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    is_special = models.BooleanField(default=False)
+    special = models.BooleanField(default=False)
     status = models.CharField(max_length=1,choices=STATUS_CHOICES)
 
 

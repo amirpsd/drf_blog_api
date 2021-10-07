@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('publish', models.DateTimeField(default=django.utils.timezone.now)),
                 ('create', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('is_special', models.BooleanField(default=False)),
+                ('special', models.BooleanField(default=False)),
                 ('status', models.CharField(choices=[('p', 'publish'), ('d', 'draft')], max_length=1)),
                 ('author', models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='blogs', to=settings.AUTH_USER_MODEL)),
                 ('category', models.ManyToManyField(blank=True, default=None, related_name='blogs', to='blog_category.Category')),

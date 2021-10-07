@@ -6,7 +6,7 @@ from .models import Blog
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title','slug','author','is_special','status')
+    list_display = ('title','slug','author','special','status')
     search_fields = ('title','author__username','category__title')
-    list_filter = ('status','is_special','publish')
+    list_filter = ('status','special','publish')
     list_per_page = 30
