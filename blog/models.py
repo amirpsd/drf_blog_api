@@ -6,6 +6,7 @@ from blog_category.models import Category
 
 from extensions.upload_file_path import upload_file_path
 
+from .managers import BlogManager
 
 
 # Create your models here.
@@ -50,3 +51,6 @@ class Blog(models.Model):
         ordering = ['-publish','-updated']
         verbose_name = "blog"
         verbose_name_plural = "blogs"
+
+
+    objects = BlogManager()

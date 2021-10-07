@@ -1,5 +1,7 @@
 from django.db import models
 
+from .managers import CategoryManager
+
 # Create your models here.
 
 class Category(models.Model):
@@ -24,4 +26,5 @@ class Category(models.Model):
         verbose_name = 'category'
         verbose_name_plural = 'categories' 
 
+    objects = CategoryManager()
     
