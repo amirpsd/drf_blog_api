@@ -7,5 +7,5 @@ from .views import (
 app_name = 'blog-api'
 
 urlpatterns = [
-    path('', BlogListApiView.as_view()),
+    path('', BlogListApiView.as_view(),name='list'),
 ]   
