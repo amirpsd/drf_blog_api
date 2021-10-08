@@ -140,6 +140,6 @@ AUTH_USER_MODEL = 'account.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'blog.permissions.IsSuperUserOrReadOnly',
+        'blog.api.permissions.IsSuperUserOrReadOnly',
     ]
 }
