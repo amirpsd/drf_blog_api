@@ -22,6 +22,7 @@ class BlogListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         exclude = [
+            'id',
             'create',
             'status',
             'updated',
