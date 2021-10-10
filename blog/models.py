@@ -22,7 +22,8 @@ class Blog(models.Model):
     author = models.ForeignKey(
         User,
         default=None,
-        null=True,
+        null=False,
+        blank=False,
         on_delete=models.CASCADE,
         related_name='blogs',
     )
