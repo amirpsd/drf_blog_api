@@ -42,3 +42,30 @@ class BlogCreateSerializer(serializers.ModelSerializer):
             'special',
             'status',
         ]
+
+class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField(method_name='get_author')
+    slug = serializers.ReadOnlyField()
+
+    def get_author(self,obj):
+        return {
+            "username":obj.author.username,
+            "first_name":obj.author.first_name,
+            "last_name":obj.author.last_name,
+        }
+
+    class Meta:
+        model = Blog
+        fields = [
+            'id',
+            'author',
+            'title',
+            'slug',
+            'body',
+            'image',
+            'category',
+            'publish',
+            'special',
+            'status',
+            'updated',
+        ]

@@ -1,6 +1,7 @@
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
+    RetrieveUpdateDestroyAPIView,
 )
 
 from blog.models import Blog
@@ -9,9 +10,11 @@ from .pagination import BlogLimitOffsetPagination
 from .serializers import (
     BlogListSerializer,
     BlogCreateSerializer,
+    BlogDetailUpdateDeleteSerializer,
 )
 from .permissions import (
     IsSuperUserOrAuthor,
+    IsSuperUserOrAuthorOrReadOnly,
 )
 
 class BlogListApiView(ListAPIView):
@@ -31,3 +34,12 @@ class BlogCreateApiView(CreateAPIView):
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
+
+
+class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
+    serializer_class =BlogDetailUpdateDeleteSerializer
+    permission_classes = [IsSuperUserOrAuthorOrReadOnly,]
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+        return Blog.objects.publish()
