@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-
 from blog.models import Blog
 
 # create serializers 
@@ -26,4 +25,19 @@ class BlogListSerializer(serializers.ModelSerializer):
             'create',
             'status',
             'updated',
+        ]
+
+
+class BlogCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Blog
+        fields = [
+            'title',
+            'body',
+            'image',
+            'category',
+            'publish',
+            'special',
+            'status',
         ]
