@@ -33,6 +33,12 @@ class BlogCreateApiView(CreateAPIView):
         return Blog.objects.publish()
 
     def perform_create(self, serializer):
+        if not self.request.user.is_superuser:
+            return serializer.save(
+                author=self.request.user,
+                status='d',
+                special=False,
+                )
         return serializer.save(author=self.request.user)
 
 
