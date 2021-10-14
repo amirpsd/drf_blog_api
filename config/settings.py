@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'blog_category.apps.BlogCategoryConfig',
     # install app
     'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -141,5 +142,10 @@ AUTH_USER_MODEL = 'account.User'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'blog.api.permissions.IsSuperUserOrReadOnly',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
     ]
 }

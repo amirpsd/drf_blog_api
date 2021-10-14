@@ -20,6 +20,22 @@ from .permissions import (
 class BlogListApiView(ListAPIView):
     serializer_class = BlogListSerializer
     pagination_class = BlogLimitOffsetPagination
+    filterset_fields = [
+        'category',
+        'publish',
+        'special'
+    ]
+    search_fields = [
+        'title',
+        'body',
+        'author__username',
+        'author__first_name',
+        'body'
+    ]
+    ordering_fields = (
+        'publish',
+        'special',
+    )
 
     def get_queryset(self):
         return Blog.objects.publish()
