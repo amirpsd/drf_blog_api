@@ -22,6 +22,7 @@ from decouple import config
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
+    path('category/', include('blog_category.urls')),
 ]   
 
 
