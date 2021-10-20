@@ -12,7 +12,7 @@ from .serializers import (
     BlogCreateSerializer,
     BlogDetailUpdateDeleteSerializer,
 )
-from .permissions import (
+from permissions import (
     IsSuperUserOrAuthor,
     IsSuperUserOrAuthorOrReadOnly,
 )

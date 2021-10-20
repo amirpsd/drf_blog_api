@@ -4,8 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from blog_category.models import Category
-
+from ..models import Category
 from .serializers import CategoryListSerializer
 
 
