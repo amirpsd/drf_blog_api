@@ -141,7 +141,7 @@ AUTH_USER_MODEL = 'account.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'blog.api.permissions.IsSuperUserOrReadOnly',
+        'permissions.IsSuperUserOrReadOnly',
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
