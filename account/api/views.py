@@ -14,15 +14,15 @@ class UserListApiView(ListAPIView):
     serializer_class = UserListSerializer
     permission_classes = [IsSuperUser,]
     filterset_fields = [
-        'is_superuser',
         'author',
     ]
     search_fields = [
         'username',
+        'first_name',
         'email',
     ]
     ordering_fields = (
-        'is_superuser',
+        'id',
         "author",
     )
 
