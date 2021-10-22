@@ -14,3 +14,12 @@ class UserListSerializer(serializers.ModelSerializer):
             "email",
             "author",
         ]
+
+
+class UserDetailUpdateDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        exclude = [
+            "password",
+        ]      
+
