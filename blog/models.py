@@ -37,6 +37,7 @@ class Blog(models.Model):
     slug = models.SlugField(unique=True,blank=True)
     body = models.TextField(blank=False)
     image = models.ImageField(upload_to=upload_file_path)
+    summary = models.TextField(max_length=400)
     publish = models.DateTimeField(default=timezone.now)
     create = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
