@@ -24,6 +24,7 @@ class BlogListSerializer(serializers.ModelSerializer):
         exclude = [
             'id',
             'create',
+            'body',
             'status',
             'updated',
         ]
@@ -37,6 +38,7 @@ class BlogCreateSerializer(serializers.ModelSerializer):
             'title',
             'body',
             'image',
+            'summary',
             'category',
             'publish',
             'special',
