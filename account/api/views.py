@@ -5,10 +5,12 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveUpdateDestroyAPIView,
     )
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
     UserListSerializer,
     UserDetailUpdateDeleteSerializer,
+    UserProfileSerializer,
     )
 from permissions import IsSuperUser
 
@@ -41,4 +43,13 @@ class UserDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
         username = self.kwargs.get("username")
         user = get_object_or_404(get_user_model(), username=username)
         return user
+
+
+class UserProfileApiView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = UserProfileSerializer
     
+
+    def get_object(self):
+        user = get_user_model().objects.get(pk=self.request.user.pk)
+        return user
