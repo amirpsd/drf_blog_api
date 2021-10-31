@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'account.apps.AccountConfig',
     'blog_category.apps.BlogCategoryConfig',
+    'blog_comment.apps.BlogCommentConfig',
     # install app
     'rest_framework_simplejwt',
     'rest_framework',
