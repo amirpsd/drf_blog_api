@@ -27,6 +27,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('blog/', include('blog.urls')),
     path('category/', include('blog_category.urls')),
+    path('comment/', include('blog_comment.urls')),
     # jwt (json web token)
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
