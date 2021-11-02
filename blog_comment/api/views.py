@@ -9,9 +9,12 @@ from .serializers import (
 )
 
 class CommentListApiView(APIView):
-    
-    def get(self, request, slug, *args, **kwargs):
-        blog = Blog.objects.get(slug=slug)
-        comments = Comment.objects.filter(blog=blog)
-        serializer = CommentListSerializer(comments, many=True)
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            blog = Blog.objects.get(id=pk, status='p')
+        except Blog.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        queryset = Comment.objects.filter_by_instance(blog)
+        serializer = CommentListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -5,5 +5,5 @@ from .views import CommentListApiView
 app_name = "comment-api"
 
 urlpatterns = [
-    path('<slug:slug>', CommentListApiView.as_view(), name="list")
+    path('<int:pk>', CommentListApiView.as_view(), name="list")
 ]

@@ -6,4 +6,9 @@ from blog_comment.models import Comment
 class CommentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = "__all__" 
+        fields = [
+            'name',
+            'body',           
+            'rate', 
+            'object_id',
+        ]
