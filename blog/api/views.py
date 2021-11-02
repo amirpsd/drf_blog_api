@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
@@ -61,5 +63,10 @@ class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsSuperUserOrAuthorOrReadOnly,]
     lookup_field = 'slug'
 
-    def get_queryset(self):
-        return Blog.objects.publish()
+
+    def get_object(self):
+        slug = self.kwargs.get('slug')
+        blog = get_object_or_404(Blog, slug=slug, status='p')
+        blog.visits += 1
+        blog.save()
+        return blog 

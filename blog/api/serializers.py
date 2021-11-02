@@ -61,6 +61,7 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'author',
+            'visits',
             'title',
             'slug',
             'body',
