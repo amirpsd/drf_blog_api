@@ -43,6 +43,7 @@ class Blog(models.Model):
     updated = models.DateTimeField(auto_now=True)
     special = models.BooleanField(default=False)
     status = models.CharField(max_length=1,choices=STATUS_CHOICES)
+    visits = models.PositiveIntegerField(default=0)
 
 
     def __str__(self):
