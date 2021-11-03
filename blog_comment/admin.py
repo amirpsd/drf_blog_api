@@ -4,6 +4,6 @@ from .models import Comment
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'create', 'rate')
+    list_display = ('user', 'name', 'create')
     list_per_page = 30
 
