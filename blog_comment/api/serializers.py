@@ -23,7 +23,7 @@ class CommentListSerializer(serializers.ModelSerializer):
         ]
 
 
-class CommentCreateSerializer(serializers.ModelSerializer):
+class CommentUpdateCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
