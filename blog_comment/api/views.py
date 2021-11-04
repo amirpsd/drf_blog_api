@@ -13,6 +13,7 @@ from .serializers import (
     CommentCreateSerializer,
 )
 
+
 class CommentListApiView(APIView):
 
     def get(self, request, pk, *args, **kwargs):
@@ -26,7 +27,7 @@ class CommentListApiView(APIView):
 
 
 class CommentCreateApiView(APIView):
-    permissions_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated,]
 
     def post(self, request):
         serializer = CommentCreateSerializer(data=request.data)
@@ -46,3 +47,11 @@ class CommentCreateApiView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
+
+class CommentDeleteApiView(APIView):
+    permission_classes = [IsAuthenticated,]
+
+    def delete(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk, user=request.user)
+        comment.delete()
+        return Response(status.HTTP_204_NO_CONTENT)
