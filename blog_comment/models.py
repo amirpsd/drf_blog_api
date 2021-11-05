@@ -24,6 +24,7 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     body = models.TextField()
     create = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.user.username
