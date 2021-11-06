@@ -1,5 +1,6 @@
-from django.shortcuts import get_object_or_404
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
@@ -18,6 +19,7 @@ from permissions import (
     IsSuperUserOrAuthor,
     IsSuperUserOrAuthorOrReadOnly,
 )
+
 
 class BlogListApiView(ListAPIView):
     serializer_class = BlogListSerializer
@@ -70,3 +72,39 @@ class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
         blog.visits += 1
         blog.save()
         return blog 
+
+
+@login_required
+def like(request, pk):
+    user = request.user
+    blog = get_object_or_404(Blog, pk=pk, status='p')
+
+    if user in blog.dislikes.all():
+        blog.dislikes.remove(user)
+        blog.likes.add(user)
+
+    elif user in blog.likes.all():
+        blog.likes.remove(user)
+
+    else:
+        blog.likes.add(user)
+     
+    return redirect("/")
+
+
+@login_required
+def dislike(request, pk):
+    user = request.user
+    blog = get_object_or_404(Blog, pk=pk, status='p')
+
+    if user in blog.likes.all():
+        blog.likes.remove(user)
+        blog.dislikes.add(user)
+
+    elif user in blog.dislikes.all():
+        blog.dislikes.remove(user)
+
+    else:
+        blog.dislikes.add(user)
+     
+    return redirect("/")
