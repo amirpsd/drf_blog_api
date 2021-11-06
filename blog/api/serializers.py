@@ -4,6 +4,7 @@ from blog.models import Blog
 
 # create serializers 
 
+
 class BlogListSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField(method_name='get_author')
     category = serializers.SerializerMethodField(method_name='get_category')
@@ -23,6 +24,8 @@ class BlogListSerializer(serializers.ModelSerializer):
         model = Blog
         exclude = [
             'id',
+            'likes',
+            'dislikes',
             'create',
             'body',
             'status',
@@ -45,6 +48,7 @@ class BlogCreateSerializer(serializers.ModelSerializer):
             'status',
         ]
 
+
 class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField(method_name='get_author')
     slug = serializers.ReadOnlyField()
@@ -56,12 +60,25 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
             "last_name":obj.author.last_name,
         }
 
+    likes = serializers.SerializerMethodField(method_name='get_likes')
+
+    def get_likes(self, obj):
+        return obj.likes.count()
+
+    dislikes = serializers.SerializerMethodField(method_name='get_likes')
+
+    def get_likes(self, obj):
+        return obj.dislikes.count()
+
+
     class Meta:
         model = Blog
         fields = [
             'id',
             'author',
             'visits',
+            'likes',
+            'dislikes',
             'title',
             'slug',
             'body',
