@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     # my app
     'blog.apps.BlogConfig',
     'blog_account.apps.BlogAccountConfig',
@@ -45,6 +46,10 @@ INSTALLED_APPS = [
     # install app
     'rest_framework_simplejwt',
     'rest_framework',
+    'allauth',
+    'allauth.account',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'django_filters',
 ]
 
@@ -141,6 +146,8 @@ AUTH_USER_MODEL = 'blog_account.User'
 
 
 # api
+
+SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
