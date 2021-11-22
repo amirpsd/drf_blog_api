@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # my app
     'blog.apps.BlogConfig',
-    'account.apps.AccountConfig',
+    'blog_account.apps.BlogAccountConfig',
     'blog_category.apps.BlogCategoryConfig',
     'blog_comment.apps.BlogCommentConfig',
     # install app
@@ -137,7 +137,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'blog_account.User'
+
 
 # api
 
