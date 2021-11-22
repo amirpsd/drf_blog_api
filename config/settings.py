@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'blog_category.apps.BlogCategoryConfig',
     'blog_comment.apps.BlogCommentConfig',
     # install app
-    'rest_framework_simplejwt',
     'rest_framework',
+    'rest_framework.authtoken',
     'allauth',
     'allauth.account',
     'dj_rest_auth',
@@ -148,6 +148,12 @@ AUTH_USER_MODEL = 'blog_account.User'
 # api
 
 SITE_ID = 1
+
+REST_USE_JWT = True
+
+JWT_AUTH_COOKIE = 'access'
+JWT_AUTH_REFRESH_COOKIE = 'refresh'
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
