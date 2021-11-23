@@ -48,10 +48,11 @@ INSTALLED_APPS = [
     # install app
     'rest_framework',
     'rest_framework.authtoken',
-    'allauth',
-    'allauth.account',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'django_filters',
 ]
 
@@ -157,7 +158,6 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 
 
 # api
-
 SITE_ID = 1
 
 REST_USE_JWT = True
