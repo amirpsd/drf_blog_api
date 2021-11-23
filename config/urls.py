@@ -25,9 +25,10 @@ urlpatterns = [
     path('blog/', include('blog.urls', namespace='blog')),
     path('category/', include('blog_category.urls')),
     path('comment/', include('blog_comment.urls')),
-    path('dj/', include('dj_rest_auth.urls')),
-    path('dj/registration/', include('dj_rest_auth.registration.urls')),
-]   
+   
+    path('api/auth/', include('dj_rest_auth.urls')),
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
+]
 
 
 if config("DEBUG", cast=bool):
