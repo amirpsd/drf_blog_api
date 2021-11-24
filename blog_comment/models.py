@@ -26,6 +26,14 @@ class Comment(models.Model):
     )
     object_id = models.PositiveIntegerField(verbose_name=_("object id"))
     content_object = GenericForeignKey("content_type", "object_id")
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        related_name="children",
+        null=True,
+        blank=True,
+        verbose_name=_("parent"),
+    )
     body = models.TextField(verbose_name=_("Body"))
     create = models.DateTimeField(auto_now_add=True, verbose_name=_("Create time"))
     updated = models.DateTimeField(auto_now=True, verbose_name=_("Update time"))
