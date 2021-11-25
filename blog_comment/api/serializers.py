@@ -17,8 +17,9 @@ class CommentListSerializer(serializers.ModelSerializer):
         fields = [
             'user',
             'name',
-            'body',           
-            'create', 
+            'parent',
+            'body',
+            'create',
             'object_id',
         ]
 
@@ -29,5 +30,6 @@ class CommentUpdateCreateSerializer(serializers.ModelSerializer):
         fields = [
             'object_id',
             'name',
+            'parent',
             'body',
         ]

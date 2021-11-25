@@ -40,6 +40,7 @@ class CommentCreateApiView(APIView):
                 name = serializer.data.get('name'),
                 content_type = comment_for_model,
                 object_id = blog.id,
+                parent_id = serializer.data.get('parent'),
                 body = serializer.data.get('body'),
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
