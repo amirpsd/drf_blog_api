@@ -34,8 +34,15 @@ urlpatterns = [
 ]
 
 
-if config("DEBUG", cast=bool):
-    from django.conf import settings
+if config("DEBUG", default=False, cast=bool):
     from django.conf.urls.static import static
+    from django.conf import settings
 
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # add root static files
+    urlpatterns = urlpatterns + static(
+        settings.STATIC_URL, document_root=settings.STATIC_ROOT
+    )
+    # add media static files
+    urlpatterns = urlpatterns + static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
