@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: '.'
+      dockerfile: Dockerfile
+    container_name: "web"
+    restart: "always"
+    expose:
+     - 8000
+    depends_on:
+      - db
+    volumes:
+      - blog_static:/src/static/
+      - blog_media:/src/media/
+    networks:
+      - blog_network
+      - nginx_network1
+    env_file:
+      - "./.env"
+
+  db:
+    image: postgres:latest
+    restart: "always"
+    container_name: "db"
+    networks:
+      - blog_network
+    env_file:
+      - "./.env.db"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  nginx:
+    build:
+      context: "./nginx/."
+      dockerfile: Dockerfile
+    restart: "always"
+    container_name: "nginx"
+    ports:
+      - "80:80"
+    networks:
+      - nginx_network1
+    volumes:
+      - blog_static:/src/static/
+      - blog_media:/src/media/
+
+    depends_on:
+      - web
+
+
+volumes:
+  db_data:
+    external: True
+  blog_static:
+    external: True
+  blog_media:
+    external: True
+ 
+networks:
+  nginx_network1:
+    external: True
+  blog_network:
+    external: True
