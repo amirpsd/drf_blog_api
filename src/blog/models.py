@@ -49,13 +49,13 @@ class Blog(models.Model):
     likes = models.ManyToManyField(
         get_user_model(),
         blank=True,
-        related_name="likes",
+        related_name="blogs_like",
         verbose_name=_("Likes"),
     )
     dislikes = models.ManyToManyField(
         get_user_model(),
         blank=True,
-        related_name="dislikes",
+        related_name="blogs_dislike",
         verbose_name=_("Dislikes"),
     )
     publish = models.DateTimeField(default=timezone.now, verbose_name=_("Publish time"))
