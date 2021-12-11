@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     # my app
     'blog.apps.BlogConfig',
     'blog_account.apps.BlogAccountConfig',
-    'blog_category.apps.BlogCategoryConfig',
     'blog_comment.apps.BlogCommentConfig',
     # install app
     'rest_framework',

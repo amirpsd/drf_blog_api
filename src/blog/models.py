@@ -1,18 +1,16 @@
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db import models
 
-from blog_category.models import Category
-
 from extensions.upload_file_path import upload_file_path
 
-from .managers import BlogManager
+from .managers import BlogManager, CategoryManager
 
 
 # Create your models here.
 
-User = get_user_model()
+
 
 
 class Blog(models.Model):
@@ -21,7 +19,7 @@ class Blog(models.Model):
         ("d", "draft"),
     )
     author = models.ForeignKey(
-        User,
+        get_user_model(),
         default=None,
         null=False,
         blank=False,
@@ -30,7 +28,7 @@ class Blog(models.Model):
         verbose_name=_("Author"),
     )
     category = models.ManyToManyField(
-        Category,
+        "Category",
         default=None,
         blank=True,
         related_name="blogs",
@@ -76,3 +74,33 @@ class Blog(models.Model):
         verbose_name_plural = _("Blogs")
 
     objects = BlogManager()
+
+
+class Category(models.Model):
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        default=None,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="children",
+        verbose_name=_("Subcategory"),
+    )
+    title = models.CharField(max_length=150, blank=False, verbose_name=_("Title"))
+    slug = models.SlugField(
+        unique=True,
+        blank=False,
+        verbose_name=_("Slug"),
+        help_text=_("Do not fill in here"),
+    )
+    status = models.BooleanField(default=False, verbose_name=_("Status"))
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
+    objects = CategoryManager()

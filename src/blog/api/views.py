@@ -6,14 +6,18 @@ from rest_framework.generics import (
     CreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status 
 
-from blog.models import Blog
+from blog.models import Blog, Category
 
 from .pagination import BlogLimitOffsetPagination
 from .serializers import (
     BlogListSerializer,
     BlogCreateSerializer,
     BlogDetailUpdateDeleteSerializer,
+    CategoryListSerializer,
 )
 from permissions import (
     IsSuperUserOrAuthor,
@@ -108,3 +112,12 @@ def dislike(request, pk):
         blog.dislikes.add(user)
      
     return redirect("/")
+
+
+class CategoryListApiView(APIView):
+    
+    def get(self, request, slug):
+        category = get_object_or_404(Category.objects.active(), slug=slug)
+        category_list = category.blogs.publish()
+        serializer = CategoryListSerializer(category_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

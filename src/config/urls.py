@@ -25,7 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('blog_account.urls')),
     path('blog/', include('blog.urls', namespace='blog')),
-    path('category/', include('blog_category.urls')),
     path('comment/', include('blog_comment.urls')),
    
     path('api/auth/', include('dj_rest_auth.urls')),

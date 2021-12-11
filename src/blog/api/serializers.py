@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from blog.models import Blog
+from blog.models import Blog, Category
 
 # create serializers 
 
@@ -65,9 +65,9 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         return obj.likes.count()
 
-    dislikes = serializers.SerializerMethodField(method_name='get_likes')
+    dislikes = serializers.SerializerMethodField(method_name='get_dislikes')
 
-    def get_likes(self, obj):
+    def get_dislikes(self, obj):
         return obj.dislikes.count()
 
 
@@ -89,3 +89,9 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
             'status',
             'updated',
         ]
+
+
+class CategoryListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
