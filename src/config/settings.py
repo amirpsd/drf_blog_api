@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # my app
     'blog.apps.BlogConfig',
-    'blog_account.apps.BlogAccountConfig',
+    'accounts.apps.AccountsConfig',
     'blog_comment.apps.BlogCommentConfig',
     # install app
     'rest_framework',
@@ -162,7 +162,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = 'blog_account.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 
 # email settings

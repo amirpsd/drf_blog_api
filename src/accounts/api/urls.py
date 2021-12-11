@@ -6,7 +6,7 @@ from .views import (
     UserProfileApiView,
     )
 
-app_name = "account-api"
+app_name = "accounts-api"
 
 urlpatterns = [
     path("", UserListApiView.as_view(), name="list"),
