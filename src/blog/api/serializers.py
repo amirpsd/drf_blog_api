@@ -23,29 +23,29 @@ class BlogListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         exclude = [
-            'id',
-            'likes',
-            'dislikes',
-            'create',
-            'body',
-            'status',
-            'updated',
+            'id', 'likes',
+            'dislikes', 'create',
+            'body', 'status',
+            'updated', 'publish',
+            'visits', 'special',
         ]
 
 
 class BlogCreateSerializer(serializers.ModelSerializer):
 
+    category = serializers.SlugRelatedField(
+        many=True, 
+        queryset=Category.objects.all(),
+        slug_field='id'
+    )
+
     class Meta:
         model = Blog
         fields = [
-            'title',
-            'body',
-            'image',
-            'summary',
-            'category',
-            'publish',
-            'special',
-            'status',
+            'title', 'body',
+            'image', 'summary',
+            'category', 'publish',
+            'special', 'status',
         ]
 
 
@@ -73,25 +73,18 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = [
-            'id',
-            'author',
-            'visits',
-            'likes',
-            'dislikes',
-            'title',
-            'slug',
-            'body',
-            'image',
-            'category',
-            'publish',
-            'special',
-            'status',
-            'updated',
+        exclude =[
+            "summary", "create", 
+            "updated",
+        ]
+        read_only_fields = [
+            "likes", "dislikes",
         ]
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = [
+            "parent", "title" 
+        ]

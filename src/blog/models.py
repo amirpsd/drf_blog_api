@@ -12,7 +12,6 @@ from .managers import BlogManager, CategoryManager
 
 
 
-
 class Blog(models.Model):
     STATUS_CHOICES = (
         ("p", "publish"),
