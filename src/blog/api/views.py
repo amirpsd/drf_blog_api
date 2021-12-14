@@ -14,6 +14,7 @@ from .serializers import (
     BlogListSerializer,
     BlogCreateSerializer,
     BlogDetailUpdateDeleteSerializer,
+    CategoryListSerializer,
 )
 from permissions import (
     IsSuperUserOrAuthor,
@@ -112,7 +113,7 @@ def dislike(request, pk):
     return redirect("blog:blog-api:list")
 
 
-class CategoryListApiView(ListAPIView):
+class CategoryBlogApiView(ListAPIView):
     serializer_class = BlogListSerializer
     lookup_field = 'slug'
 
@@ -120,3 +121,9 @@ class CategoryListApiView(ListAPIView):
         category = get_object_or_404(Category.objects.active(), slug=self.kwargs.get("slug"))
         queryset = category.blogs.publish()
         return queryset
+
+
+class CategoryListApiView(ListAPIView):
+    serializer_class = CategoryListSerializer
+    lookup_field = 'slug'
+    queryset = Category.objects.active()

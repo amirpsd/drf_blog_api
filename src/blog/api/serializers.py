@@ -83,6 +83,14 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
+
+    parent = serializers.SerializerMethodField(method_name='get_parent')
+
+    def get_parent(self,obj):
+        return {
+            "title":str(obj.parent),
+        }
+
     class Meta:
         model = Category
         fields = [
