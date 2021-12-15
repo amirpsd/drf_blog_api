@@ -12,8 +12,10 @@ services:
     depends_on:
       - db
     volumes:
-      - blog_static:/src/static/
-      - blog_media:/src/media/
+      - type: 'bind'
+        source : './src/'
+        target: '/src'
+      
     networks:
       - blog_network
       - nginx_network1
@@ -42,8 +44,13 @@ services:
     networks:
       - nginx_network1
     volumes:
-      - blog_static:/src/static/
-      - blog_media:/src/media/
+      - type : "bind"
+        source : './src/static/'
+        target : '/src/static'
+
+      - type : "bind"
+        source : './src/media/'
+        target : '/src/media'
 
     depends_on:
       - web
@@ -52,11 +59,7 @@ services:
 volumes:
   db_data:
     external: True
-  blog_static:
-    external: True
-  blog_media:
-    external: True
- 
+
 networks:
   nginx_network1:
     external: True
