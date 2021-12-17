@@ -11,7 +11,7 @@ This project is a Blog site written with [python3.9](https://www.python.org) and
 ### Clone the project
 
 ```shell
-git clone https://github.com/amirpsd/django_blog_api.git cd django_seiko_shop && cp .env-sample .env && cp .env.db-sample .env.db
+git clone https://github.com/amirpsd/django_blog_api.git && cd django_blog_api && cp .env-sample .env && cp .env.db-example .env.db && rm .env-sample .env.db-example
 ```
 
 ### install Docker
