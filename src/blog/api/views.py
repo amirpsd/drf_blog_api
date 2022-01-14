@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_GET
 
 from rest_framework.generics import (
     ListAPIView,
@@ -64,8 +65,11 @@ class BlogCreateApiView(CreateAPIView):
 class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = BlogDetailUpdateDeleteSerializer
     permission_classes = (IsSuperUserOrAuthorOrReadOnly,)
-    lookup_field = 'slug'
-    queryset = Blog.objects.publish()
+    lookup_field = "slug"
+
+    def get_object(self):
+        blog = get_object_or_404(Blog, slug=self.kwargs.get("slug"))
+        return blog
 
     def perform_update(self, serializer):
         if not self.request.user.is_superuser:
@@ -77,6 +81,7 @@ class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
         return serializer.save()
 
 
+@require_GET
 @login_required
 def like(request, pk):
     user = request.user
@@ -95,6 +100,7 @@ def like(request, pk):
     return redirect("blog:blog-api:list")
 
 
+@require_GET
 @login_required
 def dislike(request, pk):
     user = request.user
