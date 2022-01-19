@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from rest_framework.generics import (
@@ -81,6 +82,7 @@ class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
         return serializer.save()
 
 
+@csrf_exempt
 @require_GET
 @login_required
 def like(request, pk):
@@ -100,6 +102,7 @@ def like(request, pk):
     return redirect("blog:blog-api:list")
 
 
+@csrf_exempt
 @require_GET
 @login_required
 def dislike(request, pk):
