@@ -39,21 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     # my app
     'blog.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
     'blog_comment.apps.BlogCommentConfig',
     # install app
     'rest_framework',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    'rest_framework_simplejwt',
     'django_filters',
 ]
 
@@ -177,13 +171,6 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 
 
 # api
-SITE_ID = 1
-
-REST_USE_JWT = True
-
-JWT_AUTH_COOKIE = 'access'
-JWT_AUTH_REFRESH_COOKIE = 'refresh'
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -195,7 +182,8 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }

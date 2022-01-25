@@ -5,17 +5,11 @@ from .models import User
 
 # Register your models here.
 
-UserAdmin.fieldsets[2][1]['fields'] = (
-    'is_active',
-    'is_staff',
-    'is_superuser',
-    'groups',
-    'user_permissions',
-    'author',
-    'special_user',
-    )
-UserAdmin.list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'author', 'is_special_user')
-
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('phone', 'first_name', 'last_name', 'is_staff', "author", "is_special_user")
+    list_filter = ('is_staff', 'is_superuser', 'groups')
+    search_fields = ('first_name', 'last_name', 'phone')
+    ordering = ('phone',)
 
 
 admin.site.register(User, UserAdmin)

@@ -22,9 +22,9 @@ class UserListApiView(ListAPIView):
         'author',
     ]
     search_fields = [
-        'username',
+        'phone',
         'first_name',
-        'email',
+        'last_name',
     ]
     ordering_fields = (
         'id',
@@ -40,15 +40,14 @@ class UserDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsSuperUser,]
 
     def get_object(self):
-        username = self.kwargs.get("username")
-        user = get_object_or_404(get_user_model(), username=username)
+        phone = self.kwargs.get("phone")
+        user = get_object_or_404(get_user_model(), phone=phone)
         return user
 
 
 class UserProfileApiView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated,]
     serializer_class = UserProfileSerializer
-    
 
     def get_object(self):
         user = get_user_model().objects.get(pk=self.request.user.pk)

@@ -29,12 +29,11 @@ class BlogListApiView(ListAPIView):
     pagination_class = BlogLimitOffsetPagination
     filterset_fields = [
         'category',
-        'special'
+        'special',
     ]
     search_fields = [
         'title',
         'summary',
-        'author__username',
         'author__first_name',
     ]
     ordering_fields = (

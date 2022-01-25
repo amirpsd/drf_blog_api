@@ -39,7 +39,7 @@ class Comment(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name=_("Update time"))
 
     def __str__(self):
-        return self.user.username
+        return self.user.phone
 
     objects = CommentManager()
 

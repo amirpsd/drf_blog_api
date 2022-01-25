@@ -8,10 +8,9 @@ class UserListSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = [
             "id",
-            "username",
+            "phone",
             "first_name",
             "last_name",
-            "email",
             "author",
         ]
 
@@ -25,14 +24,13 @@ class UserDetailUpdateDeleteSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    username = serializers.ReadOnlyField()
+    phone = serializers.ReadOnlyField()
     
     class Meta:
         model = get_user_model()
         fields = [
             "id",
-            "username",
+            "phone",
             "first_name",
             "last_name",
-            "email",
         ]

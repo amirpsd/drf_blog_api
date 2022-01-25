@@ -11,7 +11,6 @@ class BlogListSerializer(serializers.ModelSerializer):
 
     def get_author(self,obj):
         return {
-            "username":obj.author.username,
             "first_name":obj.author.first_name,
             "last_name":obj.author.last_name,
         }
@@ -55,7 +54,6 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
 
     def get_author(self,obj):
         return {
-            "username":obj.author.username,
             "first_name":obj.author.first_name,
             "last_name":obj.author.last_name,
         }

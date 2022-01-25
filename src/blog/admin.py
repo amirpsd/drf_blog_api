@@ -7,7 +7,7 @@ from .models import Blog, Category
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'author', 'special', 'status', 'visits')
-    search_fields = ('title','author__username','category__title')
+    search_fields = ('title','author__first_name','category__title')
     list_filter = ('status','special','publish')
     exclude = ("slug",)
     filter_horizontal = ("category", "likes", "dislikes")

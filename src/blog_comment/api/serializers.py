@@ -8,7 +8,7 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         return {
-            "username":obj.user.username,
+            "name":obj.user.first_name,
         }
 
 
