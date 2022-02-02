@@ -9,30 +9,35 @@ from .managers import CustomUserManager
 
 # Create your models here.
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,14}$',
-        message=_("Phone number must be entered in the format: '+999999999'. Up to 14 digits allowed.")
+        regex=r"^09\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number.")
     )
     phone = models.CharField(
-        max_length=11,
-        validators=[phone_regex],
-        unique=True,
-        verbose_name=_("phone")
+        max_length=11, validators=[phone_regex], unique=True, verbose_name=_("phone")
     )
-    first_name = models.CharField(max_length=100, blank=True, verbose_name=_('first name'))
-    last_name = models.CharField(max_length=100, blank=True, verbose_name=_('last name'))
+    first_name = models.CharField(
+        max_length=100, blank=True, verbose_name=_("first name")
+    )
+    last_name = models.CharField(
+        max_length=100, blank=True, verbose_name=_("last name")
+    )
     author = models.BooleanField(default=False, blank=True, verbose_name=_("author"))
-    special_user = models.DateTimeField(default=timezone.now, verbose_name=_('Special User'))
+    special_user = models.DateTimeField(
+        default=timezone.now, verbose_name=_("Special User")
+    )
 
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    date_joined = models.DateTimeField(
+        default=timezone.now, verbose_name=_("date joined")
+    )
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'phone'
+    USERNAME_FIELD = "phone"
     REQUIRED_FIELDS = []
 
     def __str__(self):
@@ -45,7 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @display(
         boolean=True,
-        description="Special User",
+        description=_("Special User"),
     )
     def is_special_user(self):
         if self.special_user > timezone.now():
