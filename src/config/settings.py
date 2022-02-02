@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
-from decouple import config # noqa
+from decouple import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
     'blog_comment.apps.BlogCommentConfig',
+    'extensions',
     # install app
     'rest_framework',
     'drf_spectacular',
