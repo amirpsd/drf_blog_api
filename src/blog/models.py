@@ -65,7 +65,7 @@ class Blog(models.Model):
     visits = models.PositiveIntegerField(default=0, verbose_name=_("Visits"))
 
     def __str__(self):
-        return self.author.name + " | " + self.title
+        return f"{self.author.first_name} {self.title}"
 
     class Meta:
         ordering = ["-publish", "-updated"]
