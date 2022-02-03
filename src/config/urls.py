@@ -31,7 +31,7 @@ from decouple import config
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', include('accounts.urls')),
+    path('account/', include('account.urls')),
     path('blog/', include('blog.urls', namespace='blog')),
     path('comment/', include('blog_comment.urls')),
 

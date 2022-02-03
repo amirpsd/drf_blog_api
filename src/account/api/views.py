@@ -54,8 +54,8 @@ class UserDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
     ]
 
     def get_object(self):
-        phone = self.kwargs.get("phone")
-        user = get_object_or_404(get_user_model(), phone=phone)
+        pk = self.kwargs.get("pk")
+        user = get_object_or_404(get_user_model(), pk=pk)
         return user
 
 
@@ -93,6 +93,7 @@ class RegisterApiView(APIView):
             code = otp_generator()
             context = {
                 "code": code,
+                # Here the otp code must later be sent to the user's phone number by a server.
             }
             request.session["phone"] = phone
             cache.set(code, request.session["phone"], 300)

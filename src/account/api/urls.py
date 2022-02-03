@@ -8,12 +8,12 @@ from .views import (
     VerifyOtpApiView,
 )
 
-app_name = "accounts-api"
+app_name = "account-api"
 
 urlpatterns = [
     path("", UserListApiView.as_view(), name="list"),
     path("profile/", UserProfileApiView.as_view(), name="profile"),
     path("register/", RegisterApiView.as_view(), name="register"),
     path("register/verify/", VerifyOtpApiView.as_view(), name="verify"),
-    path("<phone>/", UserDetailUpdateDeleteApiView.as_view(), name="detail"),
+    path("users/<int:pk>/", UserDetailUpdateDeleteApiView.as_view(), name="users-detail"),
 ]
