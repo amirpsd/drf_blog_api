@@ -57,3 +57,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             return True
         else:
             return False
+
+
+class PhoneOtp(models.Model):
+    phone_regex = RegexValidator(
+        regex=r"^09\d{2}\s*?\d{3}\s*?\d{4}$",
+    )
+    phone = models.CharField(
+        max_length=11, validators=[phone_regex], unique=True,
+    )
+    otp = models.CharField(max_length=6)
+
+    count = models.PositiveSmallIntegerField(default=0)
+
+
+    def __str__(self):
+        return self.phone
