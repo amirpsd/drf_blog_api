@@ -36,18 +36,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
 
 
-class RegisterSerializer(serializers.Serializer):
+class RegisterLoginSerializer(serializers.Serializer):
     phone = serializers.CharField(
-        max_length=11,
-        min_length=10,
+        max_length=12,
+        min_length=12,
     )
 
     def validate_phone(self, value):
         from re import match
 
-        if len(value) == 10 and value[0] != "0":
-            value = "0" + value
-        if not match("^09\d{2}\s*?\d{3}\s*?\d{4}$", value):
+        if not match("^989\d{2}\s*?\d{3}\s*?\d{4}$", value):
             raise serializers.ValidationError("Invalid phone number.")
 
         return value

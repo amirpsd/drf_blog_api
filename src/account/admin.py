@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User
+from .models import User, PhoneOtp
 
 # Register your models here.
 
@@ -13,7 +13,17 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_staff", "is_superuser", "groups")
     search_fields = ("first_name", "last_name", "phone")
-    ordering = ("phone",)
+    ordering = ("is_superuser", "is_staff", "pk")
+
+
+class PhoneOtpAdmin(admin.ModelAdmin):
+    list_display = (
+        "phone", "otp", "count",
+    )
+    search_fields = ("phone", "otp",)
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(PhoneOtp, PhoneOtpAdmin)
+
+

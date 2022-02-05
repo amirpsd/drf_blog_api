@@ -12,10 +12,10 @@ from .managers import CustomUserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     phone_regex = RegexValidator(
-        regex=r"^09\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number.")
+        regex=r"^989\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number.")
     )
     phone = models.CharField(
-        max_length=11, validators=[phone_regex], unique=True, verbose_name=_("phone")
+        max_length=12, validators=[phone_regex], unique=True, verbose_name=_("phone")
     )
     first_name = models.CharField(
         max_length=100, blank=True, verbose_name=_("first name")
@@ -61,14 +61,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class PhoneOtp(models.Model):
     phone_regex = RegexValidator(
-        regex=r"^09\d{2}\s*?\d{3}\s*?\d{4}$",
+        regex=r"^989\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number."),
     )
     phone = models.CharField(
-        max_length=11, validators=[phone_regex], unique=True,
+        max_length=12, validators=[phone_regex], unique=True, verbose_name=_("phone"),
     )
     otp = models.CharField(max_length=6)
 
-    count = models.PositiveSmallIntegerField(default=0)
+    count = models.PositiveSmallIntegerField(default=0, help_text=_("Number of otp sent"))
 
 
     def __str__(self):
