@@ -17,7 +17,7 @@ from .serializers import (
     UserListSerializer,
     UserDetailUpdateDeleteSerializer,
     UserProfileSerializer,
-    RegisterSerializer,
+    RegisterLoginSerializer,
     OtpSerializer,
 )
 from ..models import PhoneOtp 
@@ -76,16 +76,17 @@ class RegisterApiView(APIView):
     ]
 
     def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
+        serializer = RegisterLoginSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.data.get("phone")
+            user_is_exists = get_user_model().objects.filter(phone=phone).values("phone").exists()
 
-            if get_user_model().objects.filter(phone=phone).exists():
+            if user_is_exists:
                 return Response(
                     {
-                        "Bad Request": "There is already a user with this phone number, please enter a different value.",
+                        "User exists.": "Please enter a different phone number.",
                     },
-                    status=status.HTTP_400_BAD_REQUEST,
+                    status=status.HTTP_401_UNAUTHORIZED,
                 )
             code = otp_generator()
             user, created = PhoneOtp.objects.get_or_create(
@@ -101,7 +102,49 @@ class RegisterApiView(APIView):
                     },
                     status=status.HTTP_429_TOO_MANY_REQUESTS,
                 )
-            cache.set(phone, code, 300)
+            cache.set(phone, code, 500)
+            context = {
+                "code": code,
+                # Here the otp code must later be sent to the user's phone number by a server.
+            }
+            return Response(context, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginApiView(APIView):
+    permission_classes = [
+        AllowAny,
+    ]
+
+    def post(self, request):
+        serializer = RegisterLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.data.get("phone")
+            user_is_exists = get_user_model().objects.filter(phone=phone).values("phone").exists()
+
+            if not user_is_exists:
+                return Response(
+                    {
+                        "No User exists.": "Please enter another phone number.",
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+            code = otp_generator()
+            user, created = PhoneOtp.objects.get_or_create(
+                phone=phone,
+            )
+            user.otp = code
+            user.count += 1
+            user.save(update_fields=["otp", "count"])
+            if user.count >= 8 :
+                return Response(
+                    {
+                        "Many Request": "You requested too much.",
+                    },
+                    status=status.HTTP_429_TOO_MANY_REQUESTS,
+                )
+            cache.set(phone, code, 500)
             context = {
                 "code": code,
                 # Here the otp code must later be sent to the user's phone number by a server.
@@ -120,21 +163,26 @@ class VerifyOtpApiView(APIView):
         serializer = OtpSerializer(data=request.data)
         if serializer.is_valid():
             code = serializer.data.get("code")
-            phone = PhoneOtp.objects.filter(otp=code)
-            if not phone.exists():
+            query = PhoneOtp.objects.filter(otp=code)
+
+            if not query.exists():
                 return Response(
                     {
                         "Incorrect code.": "The code entered is incorrect.",
                     },
                     status=status.HTTP_406_NOT_ACCEPTABLE,
                 )
-            code_in_cache = cache.get(phone.first())
+
+            phone = query.first()
+            code_in_cache = cache.get(phone)
 
             if code_in_cache is not None:
                 if code_in_cache == code:
-                    user = get_user_model().objects.create_user(phone=phone.first())
+                    user, created = get_user_model().objects.get_or_create(phone=phone)
                     refresh = RefreshToken.for_user(user)
+                    query.delete()
                     context = {
+                        "created":created,
                         "refresh": str(refresh),
                         "access": str(refresh.access_token),
                     }
@@ -142,7 +190,7 @@ class VerifyOtpApiView(APIView):
                 else:
                     return Response(
                         {
-                            "Bad Request": "The code entered is incorrect.",
+                            "Incorrect code.": "The code entered is incorrect.",
                         },
                         status=status.HTTP_406_NOT_ACCEPTABLE,
                     )

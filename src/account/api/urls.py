@@ -5,6 +5,7 @@ from .views import (
     UserDetailUpdateDeleteApiView,
     UserProfileApiView,
     RegisterApiView,
+    LoginApiView,
     VerifyOtpApiView,
 )
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path("", UserListApiView.as_view(), name="list"),
     path("profile/", UserProfileApiView.as_view(), name="profile"),
     path("register/", RegisterApiView.as_view(), name="register"),
-    path("register/verify/", VerifyOtpApiView.as_view(), name="verify"),
+    path("login/", LoginApiView.as_view(), name="login"),
+    path("verify/", VerifyOtpApiView.as_view(), name="verify-otp"),
     path("users/<int:pk>/", UserDetailUpdateDeleteApiView.as_view(), name="users-detail"),
 ]
