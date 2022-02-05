@@ -105,7 +105,7 @@ class RegisterApiView(APIView):
             cache.set(phone, code, 500)
             context = {
                 "code": code,
-                # Here the otp code must later be sent to the user's phone number by a server.
+                # Here the otp code must later be sent to the user's phone number by SMS system.
             }
             return Response(context, status=status.HTTP_200_OK)
         else:
@@ -147,7 +147,7 @@ class LoginApiView(APIView):
             cache.set(phone, code, 500)
             context = {
                 "code": code,
-                # Here the otp code must later be sent to the user's phone number by a server.
+                # Here the otp code must later be sent to the user's phone number by a SMS system.
             }
             return Response(context, status=status.HTTP_200_OK)
         else:
