@@ -79,7 +79,7 @@ class RegisterApiView(APIView):
         serializer = RegisterLoginSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.data.get("phone")
-            user_is_exists = get_user_model().objects.filter(phone=phone).values("phone").exists()
+            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
 
             if user_is_exists:
                 return Response(
@@ -121,7 +121,7 @@ class LoginApiView(APIView):
         serializer = RegisterLoginSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.data.get("phone")
-            user_is_exists = get_user_model().objects.filter(phone=phone).values("phone").exists()
+            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
 
             if not user_is_exists:
                 return Response(
@@ -173,14 +173,15 @@ class VerifyOtpApiView(APIView):
                     status=status.HTTP_406_NOT_ACCEPTABLE,
                 )
 
-            phone = query.first()
-            code_in_cache = cache.get(phone)
+            object = query.first()
+            code_in_cache = cache.get(object.phone)
 
             if code_in_cache is not None:
                 if code_in_cache == code:
-                    user, created = get_user_model().objects.get_or_create(phone=phone)
+                    user, created = get_user_model().objects.get_or_create(phone=object.phone)
                     refresh = RefreshToken.for_user(user)
                     query.delete()
+                    cache.delete(object.phone)
                     context = {
                         "created":created,
                         "refresh": str(refresh),

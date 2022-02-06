@@ -100,7 +100,7 @@ class LikeBlogApiView(APIView):
             {
                 "ok" : "Your request was successful.",
             },
-            status=201,
+            status=200,
         )
      
 
