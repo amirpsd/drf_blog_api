@@ -4,8 +4,7 @@ from .views import (
     BlogListApiView,
     BlogCreateApiView,
     BlogDetailUpdateDeleteApiView,
-    like,
-    dislike,
+    LikeBlogApiView,
     CategoryBlogApiView,
     CategoryListApiView,
 )
@@ -18,6 +17,5 @@ urlpatterns = [
     path('category/list/', CategoryListApiView.as_view(), name="category-list"),
     path('category/<slug:slug>/', CategoryBlogApiView.as_view(), name="category-blog"),
     path('<slug:slug>/', BlogDetailUpdateDeleteApiView.as_view(), name='detail'),
-    path('like/<int:pk>/', like, name='like'),
-    path('dislike/<int:pk>/', dislike, name='dislike'),
+    path('like/<int:pk>/', LikeBlogApiView.as_view(), name='like'),
 ]   

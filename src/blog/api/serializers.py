@@ -23,10 +23,10 @@ class BlogListSerializer(serializers.ModelSerializer):
         model = Blog
         exclude = [
             'id', 'likes',
-            'dislikes', 'create',
-            'body', 'status',
-            'updated', 'publish',
-            'visits', 'special',
+            'create', 'body', 
+            'status', 'updated', 
+            'publish', 'visits', 
+            'special',
         ]
 
 
@@ -62,12 +62,6 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
 
     def get_likes(self, obj):
         return obj.likes.count()
-
-    dislikes = serializers.SerializerMethodField(method_name='get_dislikes')
-
-    def get_dislikes(self, obj):
-        return obj.dislikes.count()
-
 
     class Meta:
         model = Blog

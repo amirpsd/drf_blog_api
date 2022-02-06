@@ -10,7 +10,7 @@ class BlogAdmin(admin.ModelAdmin):
     search_fields = ('title','author__first_name','category__title')
     list_filter = ('status','special','publish')
     exclude = ("slug",)
-    filter_horizontal = ("category", "likes", "dislikes")
+    filter_horizontal = ("category", "likes")
     radio_fields = {"status":admin.HORIZONTAL}
     list_per_page = 30
 

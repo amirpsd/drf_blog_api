@@ -1,16 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
 
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from blog.models import Blog, Category
-
 from .pagination import BlogLimitOffsetPagination
 from .serializers import (
     BlogListSerializer,
@@ -81,45 +81,28 @@ class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
         return serializer.save()
 
 
-@csrf_exempt
-@require_GET
-@login_required
-def like(request, pk):
-    user = request.user
-    blog = get_object_or_404(Blog, pk=pk, status='p')
+class LikeBlogApiView(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
 
-    if user in blog.dislikes.all():
-        blog.dislikes.remove(user)
-        blog.likes.add(user)
+    def get(self, request, pk):
+        user = request.user
+        blog = get_object_or_404(Blog, pk=pk, status='p')
 
-    elif user in blog.likes.all():
-        blog.likes.remove(user)
+        if user in blog.likes.all():
+            blog.likes.remove(user)
 
-    else:
-        blog.likes.add(user)
+        else:
+            blog.likes.add(user)
+        
+        return Response(
+            {
+                "ok" : "Your request was successful.",
+            },
+            status=201,
+        )
      
-    return redirect("blog:blog-api:list")
-
-
-@csrf_exempt
-@require_GET
-@login_required
-def dislike(request, pk):
-    user = request.user
-    blog = get_object_or_404(Blog, pk=pk, status='p')
-
-    if user in blog.likes.all():
-        blog.likes.remove(user)
-        blog.dislikes.add(user)
-
-    elif user in blog.dislikes.all():
-        blog.dislikes.remove(user)
-
-    else:
-        blog.dislikes.add(user)
-     
-    return redirect("blog:blog-api:list")
-
 
 class CategoryBlogApiView(ListAPIView):
     serializer_class = BlogListSerializer
