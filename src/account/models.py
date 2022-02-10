@@ -1,3 +1,4 @@
+from statistics import mode
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
@@ -33,6 +34,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     date_joined = models.DateTimeField(
         default=timezone.now, verbose_name=_("date joined")
+    )
+    two_step_password = models.BooleanField(
+        default=False, verbose_name=_("two step password"),
+        help_text=_("is active two step password?"),
     )
 
     objects = CustomUserManager()
