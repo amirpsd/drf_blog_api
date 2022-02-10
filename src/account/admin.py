@@ -18,7 +18,7 @@ class UserAdmin(admin.ModelAdmin):
 
 class PhoneOtpAdmin(admin.ModelAdmin):
     list_display = (
-        "phone", "otp", "count",
+        "phone", "otp", "count", "verify",
     )
     search_fields = ("phone", "otp",)
 

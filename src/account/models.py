@@ -1,4 +1,3 @@
-from statistics import mode
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
@@ -74,6 +73,7 @@ class PhoneOtp(models.Model):
     otp = models.CharField(max_length=6)
 
     count = models.PositiveSmallIntegerField(default=0, help_text=_("Number of otp sent"))
+    verify = models.BooleanField(default=False, verbose_name=_("is verify"))
 
 
     def __str__(self):
