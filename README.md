@@ -24,7 +24,7 @@ This project is a Blog site written with **python3.9** and **Django3.2** and **D
 - [Python 3.9](https://www.python.org/) , Programming Language. [](https://img.shields.io/badge/python-3.9-red)
 - [Django 3.2](https://docs.djangoproject.com/en/3.2/releases/3.2/) ,  Web Framework.
 - [Django Rest Framework 3.12](https://www.django-rest-framework.org/) , Web API's.
-- [Nginx](https://www.docker.com/) , Web Server.
+- [Nginx](https://www.nginx.com/) , Web Server.
 - [Docker](https://www.docker.com/) , Container Platform.
 - [PostgreSQL](https://www.postgresql.org/) , Database.
 - [Gunicorn](https://gunicorn.org/) , WSGI HTTP Server.
