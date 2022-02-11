@@ -3,14 +3,12 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 
-class UserListSerializer(serializers.ModelSerializer):
+class UsersListSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [
-            "id",
-            "phone",
-            "first_name",
-            "last_name",
+            "id", "phone",
+            "first_name", "last_name",
             "author",
         ]
 
@@ -29,14 +27,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [
-            "id",
-            "phone",
-            "first_name",
-            "last_name",
+            "id", "phone",
+            "first_name", "last_name",
+            "two_step_password",
         ]
 
 
-class RegisterLoginSerializer(serializers.Serializer):
+class AuthenticationSerializer(serializers.Serializer):
     phone = serializers.CharField(
         max_length=12,
         min_length=12,
@@ -56,6 +53,10 @@ class OtpSerializer(serializers.Serializer):
         max_length=6,
         min_length=6,
     )
+    password = serializers.CharField(
+        max_length=20,
+        required=False,
+    )
 
     def validate_code(self, value):
         from string import ascii_letters as char
@@ -64,3 +65,48 @@ class OtpSerializer(serializers.Serializer):
             if _ in char:
                 raise serializers.ValidationError("Invalid Code.")
         return value
+
+
+class ChangeTwoStepPasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(
+        max_length=20,
+    )
+    new_password = serializers.CharField(
+        max_length=20,
+    )
+
+    confirm_new_password = serializers.CharField(
+        max_length=20,
+    )
+
+    def validate(self, data):
+        password = data.get('new_password')
+        confirm_password = data.get('confirm_new_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError(
+                {"Error": "Your passwords didn't match."}
+            )
+
+        return data
+
+
+class CreateTwoStepPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(
+        max_length=20,
+    )
+
+    confirm_new_password = serializers.CharField(
+        max_length=20,
+    )
+
+    def validate(self, data):
+        password = data.get('new_password')
+        confirm_password = data.get('confirm_new_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError(
+                {"Error": "Your passwords didn't match."}
+            )
+
+        return data

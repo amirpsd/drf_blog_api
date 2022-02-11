@@ -1,21 +1,20 @@
 from django.urls import path
 
 from .views import (
-    UserListApiView,
-    UserDetailUpdateDeleteApiView,
-    UserProfileApiView,
-    RegisterApiView,
-    LoginApiView,
-    VerifyOtpApiView,
+    UsersList, UsersDetailUpdateDelete, UserProfile, 
+    Login, Register, VerifyOtp,
+    ChangeTwoStepPassword, CreateTwoStepPassword,
 )
 
 app_name = "account-api"
 
 urlpatterns = [
-    path("", UserListApiView.as_view(), name="list"),
-    path("profile/", UserProfileApiView.as_view(), name="profile"),
-    path("register/", RegisterApiView.as_view(), name="register"),
-    path("login/", LoginApiView.as_view(), name="login"),
-    path("verify/", VerifyOtpApiView.as_view(), name="verify-otp"),
-    path("users/<int:pk>/", UserDetailUpdateDeleteApiView.as_view(), name="users-detail"),
+    path("", UsersList.as_view(), name="users-list"),
+    path("profile/", UserProfile.as_view(), name="profile"),
+    path("login/", Login.as_view(), name="login"),
+    path("register/", Register.as_view(), name="register"),
+    path("verify/", VerifyOtp.as_view(), name="verify-otp"),
+    path("change-two-step-password/", ChangeTwoStepPassword.as_view(), name="change-two-step-password"),
+    path("create-two-step-password/", CreateTwoStepPassword.as_view(), name="create-two-step-password"),
+    path("users/<int:pk>/", UsersDetailUpdateDelete.as_view(), name="users-detail"),
 ]

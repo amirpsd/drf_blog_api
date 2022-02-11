@@ -14,19 +14,22 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import (
-    UserListSerializer,
+    UsersListSerializer,
     UserDetailUpdateDeleteSerializer,
     UserProfileSerializer,
-    RegisterLoginSerializer,
+    AuthenticationSerializer,
     OtpSerializer,
+    ChangeTwoStepPasswordSerializer,
+    CreateTwoStepPasswordSerializer,
 )
 from ..models import PhoneOtp 
+from .send_otp import send_otp
 from permissions import IsSuperUser
 from extensions.code_generator import otp_generator
 
 
-class UserListApiView(ListAPIView):
-    serializer_class = UserListSerializer
+class UsersList(ListAPIView):
+    serializer_class = UsersListSerializer
     permission_classes = [
         IsSuperUser,
     ]
@@ -39,15 +42,14 @@ class UserListApiView(ListAPIView):
         "last_name",
     ]
     ordering_fields = (
-        "id",
-        "author",
+        "id", "author",
     )
 
     def get_queryset(self):
         return get_user_model().objects.all()
 
 
-class UserDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
+class UsersDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
     serializer_class = UserDetailUpdateDeleteSerializer
     permission_classes = [
         IsSuperUser,
@@ -59,66 +61,23 @@ class UserDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
         return user
 
 
-class UserProfileApiView(RetrieveUpdateDestroyAPIView):
+class UserProfile(RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [
         IsAuthenticated,
     ]
 
     def get_object(self):
-        user = get_user_model().objects.get(pk=self.request.user.pk)
-        return user
+        return self.request.user
 
 
-class RegisterApiView(APIView):
+class Login(APIView):
     permission_classes = [
         AllowAny,
     ]
 
     def post(self, request):
-        serializer = RegisterLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            phone = serializer.data.get("phone")
-            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
-
-            if user_is_exists:
-                return Response(
-                    {
-                        "User exists.": "Please enter a different phone number.",
-                    },
-                    status=status.HTTP_401_UNAUTHORIZED,
-                )
-            code = otp_generator()
-            user, created = PhoneOtp.objects.get_or_create(
-                phone=phone,
-            )
-            user.otp = code
-            user.count += 1
-            user.save(update_fields=["otp", "count"])
-            if user.count >= 8 :
-                return Response(
-                    {
-                        "Many Request": "You requested too much.",
-                    },
-                    status=status.HTTP_429_TOO_MANY_REQUESTS,
-                )
-            cache.set(phone, code, 500)
-            context = {
-                "code": code,
-                # Here the otp code must later be sent to the user's phone number by SMS system.
-            }
-            return Response(context, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class LoginApiView(APIView):
-    permission_classes = [
-        AllowAny,
-    ]
-
-    def post(self, request):
-        serializer = RegisterLoginSerializer(data=request.data)
+        serializer = AuthenticationSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.data.get("phone")
             user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
@@ -131,39 +90,94 @@ class LoginApiView(APIView):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
             code = otp_generator()
-            user, created = PhoneOtp.objects.get_or_create(
+            user_otp, _ = PhoneOtp.objects.get_or_create(
                 phone=phone,
             )
-            user.otp = code
-            user.count += 1
-            user.save(update_fields=["otp", "count"])
-            if user.count >= 8 :
+            user_otp.otp = code
+            user_otp.count += 1
+            user_otp.save(update_fields=["otp", "count"])
+            if user_otp.count >= 4:
                 return Response(
                     {
                         "Many Request": "You requested too much.",
                     },
                     status=status.HTTP_429_TOO_MANY_REQUESTS,
                 )
-            cache.set(phone, code, 500)
+            cache.set(phone, code, 300)
+            send_otp(phone=phone, otp=code) # Here the otp code must later be sent to the user's phone number by SMS system.
             context = {
-                "code": code,
-                # Here the otp code must later be sent to the user's phone number by a SMS system.
+                "code sent.": "The code has been sent to the desired phone number.",
             }
-            return Response(context, status=status.HTTP_200_OK)
+            return Response(
+                context, 
+                status=status.HTTP_200_OK,
+            )
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.errors, 
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
-class VerifyOtpApiView(APIView):
+class Register(APIView):
     permission_classes = [
         AllowAny,
     ]
 
     def post(self, request):
+        serializer = AuthenticationSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.data.get("phone")
+            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
+
+            if user_is_exists:
+                return Response(
+                    {
+                        "User exists.": "Please enter a different phone number.",
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+            code = otp_generator()
+            user_otp, _ = PhoneOtp.objects.get_or_create(
+                phone=phone,
+            )
+            user_otp.otp = code
+            user_otp.count += 1
+            user_otp.save(update_fields=["otp", "count"])
+            if user_otp.count >= 4:
+                return Response(
+                    {
+                        "Many Request": "You requested too much.",
+                    },
+                    status=status.HTTP_429_TOO_MANY_REQUESTS,
+                )
+            cache.set(phone, code, 300)
+            send_otp(phone=phone, otp=code) # Here the otp code must later be sent to the user's phone number by SMS system.
+            context = {
+                "code sent.": "The code has been sent to the desired phone number.",
+            }
+            return Response(
+                context, 
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                serializer.errors, 
+                status=status.HTTP_400_BAD_REQUEST,               
+            )
+
+
+class VerifyOtp(APIView):
+    permission_classes = [
+        AllowAny,
+    ]
+    confirm_for_authentication = False
+
+    def post(self, request):
         serializer = OtpSerializer(data=request.data)
         if serializer.is_valid():
-            code = serializer.data.get("code")
-            query = PhoneOtp.objects.filter(otp=code)
+            received_code = serializer.data.get("code")
+            query = PhoneOtp.objects.filter(otp=received_code)
 
             if not query.exists():
                 return Response(
@@ -177,17 +191,37 @@ class VerifyOtpApiView(APIView):
             code_in_cache = cache.get(object.phone)
 
             if code_in_cache is not None:
-                if code_in_cache == code:
+                if code_in_cache == received_code:
                     user, created = get_user_model().objects.get_or_create(phone=object.phone)
-                    refresh = RefreshToken.for_user(user)
-                    query.delete()
-                    cache.delete(object.phone)
-                    context = {
-                        "created":created,
-                        "refresh": str(refresh),
-                        "access": str(refresh.access_token),
-                    }
-                    return Response(context, status=status.HTTP_200_OK)
+                    if user.two_step_password:
+                        password = serializer.data.get("password")
+                        check_password: bool = user.check_password(password)
+                        if check_password:
+                            self.confirm_for_authentication = True
+                        else:
+                            return Response(
+                                {
+                                    "Incorrect password.": "The password entered is incorrect.",
+                                },
+                                status=status.HTTP_406_NOT_ACCEPTABLE,
+                            )
+                    else:
+                        self.confirm_for_authentication = True
+
+                    if self.confirm_for_authentication:
+                        refresh = RefreshToken.for_user(user)
+                        cache.delete(object.phone)
+                        object.verify, object.count = True, 0
+                        object.save(update_fields=["verify", "count"])
+                        context = {
+                            "created": created,
+                            "refresh": str(refresh),
+                            "access": str(refresh.access_token),
+                        }
+                        return Response(
+                            context, 
+                            status=status.HTTP_200_OK,
+                        )
                 else:
                     return Response(
                         {
@@ -198,9 +232,83 @@ class VerifyOtpApiView(APIView):
             else:
                 return Response(
                     {
-                        "Code expired": "The entered code has expired.",
+                        "Code expired.": "The entered code has expired.",
                     },
                     status=status.HTTP_408_REQUEST_TIMEOUT,
                 )
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.errors, 
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class ChangeTwoStepPassword(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request):
+        if request.user.two_step_password:
+            serializer = ChangeTwoStepPasswordSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            user = get_object_or_404(get_user_model(), pk=request.user.pk)
+            old_password = serializer.data.get("old_password")
+            check_password: bool = user.check_password(old_password)
+
+            if check_password:
+                new_password = serializer.data.get("new_password")
+                user.set_password(new_password)
+                user.save(update_fields=["password"])
+
+                return Response(
+                    {
+                        "Successful.":"Your password was changed successfully.",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {
+                        "Error!":"The password entered is incorrect.",
+                    },
+                    status=status.HTTP_406_NOT_ACCEPTABLE,
+                )
+
+        return Response(
+            {
+                "Error!":"Your request could not be approved.",
+            },
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+
+class CreateTwoStepPassword(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request):
+        if not request.user.two_step_password:
+            serializer = CreateTwoStepPasswordSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            new_password = serializer.data.get("new_password")
+
+            user = get_object_or_404(get_user_model(), pk=request.user.pk)
+            user.set_password(new_password)
+            user.two_step_password = True
+            user.save(update_fields=["password", "two_step_password"])     
+            return Response(
+                {
+                    "Successful.":"Your password was changed successfully.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(
+            {
+                "Error!":"Your request could not be approved.",
+            },
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
