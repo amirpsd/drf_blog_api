@@ -24,6 +24,11 @@ from permissions import (
 
 
 class BlogsList(ListAPIView):
+    """
+    get:
+        Returns a list of all existing blogs.
+    """
+
     serializer_class = BlogsListSerializer
     pagination_class = BlogLimitOffsetPagination
     filterset_fields = [
@@ -42,6 +47,14 @@ class BlogsList(ListAPIView):
 
 
 class BlogCreate(CreateAPIView):
+    """
+    post:
+        Creates a new post instance. Returns created post data.
+
+        parameters: [title,   body,    image,   summary, 
+                    category, publish, special, status,]
+    """
+
     serializer_class = BlogCreateSerializer
     permission_classes = [IsSuperUserOrAuthor,]
 
@@ -59,6 +72,22 @@ class BlogCreate(CreateAPIView):
 
 
 class BlogDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
+    """
+    get:
+        Returns the details of a post instance. Searches post using slug field.
+
+    put:
+        Updates an existing post. Returns updated post data.
+
+        parameters: exclude = [user, create, updated, likes]
+        ]
+
+    delete:
+        Delete an existing post.
+
+        parameters = [slug]
+    """
+
     serializer_class = BlogDetailUpdateDeleteSerializer
     permission_classes = (IsSuperUserOrAuthorOrReadOnly,)
     lookup_field = "slug"
@@ -78,6 +107,13 @@ class BlogDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
 
 
 class LikeBlog(APIView):
+    """
+    get:
+        Likes the desired blog.
+
+        parameters = [pk]
+    """
+
     permission_classes = [
         IsAuthenticated,
     ]
@@ -101,6 +137,13 @@ class LikeBlog(APIView):
      
 
 class CategoryBlog(ListAPIView):
+    """
+    get:
+        Returns the list of blogs on a particular category.
+
+        parameters = [slug]
+    """
+
     serializer_class = BlogsListSerializer
     lookup_field = 'slug'
 
@@ -111,6 +154,13 @@ class CategoryBlog(ListAPIView):
 
 
 class CategoryList(ListAPIView):
+    """
+    get:
+        Returns a list of all existing category.
+        
+        parameters = [slug]
+    """
+
     serializer_class = CategoryListSerializer
     lookup_field = 'slug'
     queryset = Category.objects.active()

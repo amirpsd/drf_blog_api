@@ -15,6 +15,12 @@ from .serializers import (
 
 
 class CommentsList(APIView):
+    """
+    get:
+        Returns the list of comments on a particular post.
+
+        parameters = [pk]
+    """
 
     def get(self, request, pk):
         blog = get_object_or_404(Blog, id=pk, status="p")
@@ -27,6 +33,13 @@ class CommentsList(APIView):
 
 
 class CommentCreate(APIView):
+    """
+    post:
+        Create a comment instnace. Returns created comment data.
+
+        parameters: [object_id, name, parent, body,]
+    """
+
     permission_classes = [IsAuthenticated,]
 
     def post(self, request):
@@ -56,8 +69,19 @@ class CommentCreate(APIView):
             
 
 class CommentUpdateDelete(APIView):
-    permission_classes = [IsAuthenticated,]
+    """
+    put:
+        Updates an existing comment. Returns updated comment data.
 
+        parameters: [object_id, name, parent, body,]
+
+    delete:
+        Delete an existing comment.
+
+        parameters: [pk]
+    """
+
+    permission_classes = [IsAuthenticated,]
 
     def put(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, user=request.user)

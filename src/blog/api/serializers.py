@@ -66,11 +66,10 @@ class BlogDetailUpdateDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         exclude =[
-            "summary", "create", 
-            "updated",
+            "create", "updated",
         ]
         read_only_fields = [
-            "likes", "dislikes",
+            "likes",
         ]
 
 
