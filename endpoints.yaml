@@ -1,0 +1,1440 @@
+openapi: 3.0.3
+info:
+  title: Blog Api
+  version: '1.0'
+  description: Simple Blog with Django Rest Framework
+paths:
+  /account/api/:
+    get:
+      operationId: account_api_list
+      description: |-
+        get:
+            Returns a list of all existing users.
+      parameters:
+      - in: query
+        name: author
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsersList'
+          description: ''
+  /account/api/change-two-step-password/:
+    post:
+      operationId: account_api_change_two_step_password_create
+      description: |-
+        post:
+            Send a password to change a two-step-password.
+
+            parameters: [old_password, new_password, confirm_new_password,]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /account/api/create-two-step-password/:
+    post:
+      operationId: account_api_create_two_step_password_create
+      description: |-
+        post:
+            Send a password to create a two-step-password.
+
+            parameters: [new_password, confirm_new_password]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /account/api/login/:
+    post:
+      operationId: account_api_login_create
+      description: |-
+        post:
+            Send mobile number for Login.
+
+            parameters: [phone,]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /account/api/profile/:
+    get:
+      operationId: account_api_profile_retrieve
+      description: |-
+        get:
+            Returns the profile of user.
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete user account.
+
+            parameters: [pk]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    put:
+      operationId: account_api_profile_update
+      description: |-
+        get:
+            Returns the profile of user.
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete user account.
+
+            parameters: [pk]
+      tags:
+      - account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    patch:
+      operationId: account_api_profile_partial_update
+      description: |-
+        get:
+            Returns the profile of user.
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete user account.
+
+            parameters: [pk]
+      tags:
+      - account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfile'
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    delete:
+      operationId: account_api_profile_destroy
+      description: |-
+        get:
+            Returns the profile of user.
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete user account.
+
+            parameters: [pk]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /account/api/register/:
+    post:
+      operationId: account_api_register_create
+      description: |-
+        post:
+            Send mobile number for Register.
+
+            parameters: [phone,]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /account/api/users/{id}/:
+    get:
+      operationId: account_api_users_retrieve
+      description: |-
+        get:
+            Returns the detail of a user instance.
+
+            parameters: [pk]
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete a user instance.
+
+            parameters: [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailUpdateDelete'
+          description: ''
+    put:
+      operationId: account_api_users_update
+      description: |-
+        get:
+            Returns the detail of a user instance.
+
+            parameters: [pk]
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete a user instance.
+
+            parameters: [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDetailUpdateDelete'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserDetailUpdateDelete'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserDetailUpdateDelete'
+        required: true
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailUpdateDelete'
+          description: ''
+    patch:
+      operationId: account_api_users_partial_update
+      description: |-
+        get:
+            Returns the detail of a user instance.
+
+            parameters: [pk]
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete a user instance.
+
+            parameters: [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetailUpdateDelete'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetailUpdateDelete'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserDetailUpdateDelete'
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailUpdateDelete'
+          description: ''
+    delete:
+      operationId: account_api_users_destroy
+      description: |-
+        get:
+            Returns the detail of a user instance.
+
+            parameters: [pk]
+
+        put:
+            Update the detail of a user instance
+
+            parameters: exclude[password,]
+
+        delete:
+            Delete a user instance.
+
+            parameters: [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /account/api/verify/:
+    post:
+      operationId: account_api_verify_create
+      description: |-
+        post:
+            Send otp code to verify mobile number and complete authentication.
+            If the user has a 2-step password, he must also send a password.
+
+            parameters: [otp, password]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/token/verify/:
+    post:
+      operationId: api_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+  /blog/api/:
+    get:
+      operationId: blog_api_list
+      description: |-
+        get:
+            Returns a list of all existing blogs.
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: array
+          items:
+            type: integer
+        explode: true
+        style: form
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: special
+        schema:
+          type: boolean
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBlogsListList'
+          description: ''
+  /blog/api/{slug}/:
+    get:
+      operationId: blog_api_retrieve
+      description: |-
+        get:
+            Returns the details of a post instance. Searches post using slug field.
+
+        put:
+            Updates an existing post. Returns updated post data.
+
+            parameters: exclude = [user, create, updated, likes]
+            ]
+
+        delete:
+            Delete an existing post.
+
+            parameters = [slug]
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogDetailUpdateDelete'
+          description: ''
+    put:
+      operationId: blog_api_update
+      description: |-
+        get:
+            Returns the details of a post instance. Searches post using slug field.
+
+        put:
+            Updates an existing post. Returns updated post data.
+
+            parameters: exclude = [user, create, updated, likes]
+            ]
+
+        delete:
+            Delete an existing post.
+
+            parameters = [slug]
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogDetailUpdateDelete'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BlogDetailUpdateDelete'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlogDetailUpdateDelete'
+        required: true
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogDetailUpdateDelete'
+          description: ''
+    patch:
+      operationId: blog_api_partial_update
+      description: |-
+        get:
+            Returns the details of a post instance. Searches post using slug field.
+
+        put:
+            Updates an existing post. Returns updated post data.
+
+            parameters: exclude = [user, create, updated, likes]
+            ]
+
+        delete:
+            Delete an existing post.
+
+            parameters = [slug]
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogDetailUpdateDelete'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogDetailUpdateDelete'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogDetailUpdateDelete'
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogDetailUpdateDelete'
+          description: ''
+    delete:
+      operationId: blog_api_destroy
+      description: |-
+        get:
+            Returns the details of a post instance. Searches post using slug field.
+
+        put:
+            Updates an existing post. Returns updated post data.
+
+            parameters: exclude = [user, create, updated, likes]
+            ]
+
+        delete:
+            Delete an existing post.
+
+            parameters = [slug]
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /blog/api/category/{slug}/:
+    get:
+      operationId: blog_api_category_list
+      description: |-
+        get:
+            Returns the list of blogs on a particular category.
+
+            parameters = [slug]
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlogsList'
+          description: ''
+  /blog/api/category/list/:
+    get:
+      operationId: blog_api_category_list_list
+      description: |-
+        get:
+            Returns a list of all existing category.
+
+            parameters = [slug]
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryList'
+          description: ''
+  /blog/api/create/:
+    post:
+      operationId: blog_api_create_create
+      description: |-
+        post:
+            Creates a new post instance. Returns created post data.
+
+            parameters: [title,   body,    image,   summary,
+                        category, publish, special, status,]
+      tags:
+      - blog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BlogCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlogCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogCreate'
+          description: ''
+  /blog/api/like/{id}/:
+    get:
+      operationId: blog_api_like_retrieve
+      description: |-
+        get:
+            Likes the desired blog.
+
+            parameters = [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /comment/api/{id}/:
+    get:
+      operationId: comment_api_retrieve
+      description: |-
+        get:
+            Returns the list of comments on a particular post.
+
+            parameters = [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - comment
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /comment/api/create/:
+    post:
+      operationId: comment_api_create_create
+      description: |-
+        post:
+            Create a comment instnace. Returns created comment data.
+
+            parameters: [object_id, name, parent, body,]
+      tags:
+      - comment
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /comment/api/update-delete/{id}/:
+    put:
+      operationId: comment_api_update_delete_update
+      description: |-
+        put:
+            Updates an existing comment. Returns updated comment data.
+
+            parameters: [object_id, name, parent, body,]
+
+        delete:
+            Delete an existing comment.
+
+            parameters: [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - comment
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: comment_api_update_delete_destroy
+      description: |-
+        put:
+            Updates an existing comment. Returns updated comment data.
+
+            parameters: [object_id, name, parent, body,]
+
+        delete:
+            Delete an existing comment.
+
+            parameters: [pk]
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - comment
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    BlogCreate:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        body:
+          type: string
+          title: Content
+        image:
+          type: string
+          format: uri
+        summary:
+          type: string
+          maxLength: 400
+        category:
+          type: array
+          items:
+            type: string
+        publish:
+          type: string
+          format: date-time
+          title: Publish time
+        special:
+          type: boolean
+          title: Is special Blog ?
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+      required:
+      - body
+      - category
+      - image
+      - status
+      - summary
+      - title
+    BlogDetailUpdateDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          type: string
+          readOnly: true
+        slug:
+          type: string
+          description: Do not fill in here
+          readOnly: true
+        likes:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        body:
+          type: string
+          title: Content
+        image:
+          type: string
+          format: uri
+        summary:
+          type: string
+          maxLength: 400
+        publish:
+          type: string
+          format: date-time
+          title: Publish time
+        special:
+          type: boolean
+          title: Is special Blog ?
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        visits:
+          type: integer
+        category:
+          type: array
+          items:
+            type: integer
+            title: Categories
+          title: Categories
+      required:
+      - author
+      - body
+      - id
+      - image
+      - likes
+      - slug
+      - status
+      - summary
+      - title
+    BlogsList:
+      type: object
+      properties:
+        author:
+          type: string
+          readOnly: true
+        category:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        slug:
+          type: string
+          description: Do not fill in here
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        image:
+          type: string
+          format: uri
+        summary:
+          type: string
+          maxLength: 400
+      required:
+      - author
+      - category
+      - image
+      - summary
+      - title
+    CategoryList:
+      type: object
+      properties:
+        parent:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 150
+      required:
+      - parent
+      - title
+    PaginatedBlogsListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlogsList'
+    PatchedBlogDetailUpdateDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          type: string
+          readOnly: true
+        slug:
+          type: string
+          description: Do not fill in here
+          readOnly: true
+        likes:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        body:
+          type: string
+          title: Content
+        image:
+          type: string
+          format: uri
+        summary:
+          type: string
+          maxLength: 400
+        publish:
+          type: string
+          format: date-time
+          title: Publish time
+        special:
+          type: boolean
+          title: Is special Blog ?
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        visits:
+          type: integer
+        category:
+          type: array
+          items:
+            type: integer
+            title: Categories
+          title: Categories
+    PatchedUserDetailUpdateDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        phone:
+          type: string
+          pattern: ^989\d{2}\s*?\d{3}\s*?\d{4}$
+          maxLength: 12
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        author:
+          type: boolean
+        special_user:
+          type: string
+          format: date-time
+        is_staff:
+          type: boolean
+        is_admin:
+          type: boolean
+        date_joined:
+          type: string
+          format: date-time
+        two_step_password:
+          type: boolean
+          description: is active two step password?
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+    PatchedUserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        phone:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        two_step_password:
+          type: boolean
+          description: is active two step password?
+    StatusEnum:
+      enum:
+      - p
+      - d
+      type: string
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    UserDetailUpdateDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        phone:
+          type: string
+          pattern: ^989\d{2}\s*?\d{3}\s*?\d{4}$
+          maxLength: 12
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        author:
+          type: boolean
+        special_user:
+          type: string
+          format: date-time
+        is_staff:
+          type: boolean
+        is_admin:
+          type: boolean
+        date_joined:
+          type: string
+          format: date-time
+        two_step_password:
+          type: boolean
+          description: is active two step password?
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+      required:
+      - id
+      - phone
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        phone:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        two_step_password:
+          type: boolean
+          description: is active two step password?
+      required:
+      - id
+      - phone
+    UsersList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        phone:
+          type: string
+          pattern: ^989\d{2}\s*?\d{3}\s*?\d{4}$
+          maxLength: 12
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        author:
+          type: boolean
+      required:
+      - id
+      - phone
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
