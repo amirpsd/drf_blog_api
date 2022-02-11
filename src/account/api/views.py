@@ -29,6 +29,11 @@ from extensions.code_generator import otp_generator
 
 
 class UsersList(ListAPIView):
+    """
+    get:
+        Returns a list of all existing users.
+    """
+
     serializer_class = UsersListSerializer
     permission_classes = [
         IsSuperUser,
@@ -50,6 +55,23 @@ class UsersList(ListAPIView):
 
 
 class UsersDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
+    """
+    get:
+        Returns the detail of a user instance.
+
+        parameters: [pk]
+
+    put:
+        Update the detail of a user instance
+
+        parameters: exclude[password,]
+
+    delete:
+        Delete a user instance.
+        
+        parameters: [pk]
+    """
+
     serializer_class = UserDetailUpdateDeleteSerializer
     permission_classes = [
         IsSuperUser,
@@ -62,6 +84,21 @@ class UsersDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
 
 
 class UserProfile(RetrieveUpdateDestroyAPIView):
+    """
+    get:
+        Returns the profile of user.
+
+    put:
+        Update the detail of a user instance
+
+        parameters: exclude[password,]
+
+    delete:
+        Delete user account.
+        
+        parameters: [pk]
+    """
+
     serializer_class = UserProfileSerializer
     permission_classes = [
         IsAuthenticated,
@@ -72,6 +109,13 @@ class UserProfile(RetrieveUpdateDestroyAPIView):
 
 
 class Login(APIView):
+    """
+    post:
+        Send mobile number for Login.
+
+        parameters: [phone,]
+    """
+
     permission_classes = [
         AllowAny,
     ]
@@ -120,6 +164,13 @@ class Login(APIView):
 
 
 class Register(APIView):
+    """
+    post:
+        Send mobile number for Register.
+
+        parameters: [phone,]
+    """
+
     permission_classes = [
         AllowAny,
     ]
@@ -168,6 +219,14 @@ class Register(APIView):
 
 
 class VerifyOtp(APIView):
+    """
+    post:
+        Send otp code to verify mobile number and complete authentication.
+        If the user has a 2-step password, he must also send a password.
+
+        parameters: [otp, password]
+    """
+
     permission_classes = [
         AllowAny,
     ]
@@ -244,6 +303,13 @@ class VerifyOtp(APIView):
 
 
 class ChangeTwoStepPassword(APIView):
+    """
+    post:
+        Send a password to change a two-step-password.
+        
+        parameters: [old_password, new_password, confirm_new_password,]
+    """
+
     permission_classes = [
         IsAuthenticated,
     ]
@@ -285,6 +351,13 @@ class ChangeTwoStepPassword(APIView):
 
 
 class CreateTwoStepPassword(APIView):
+    """
+    post:
+        Send a password to create a two-step-password.
+        
+        parameters: [new_password, confirm_new_password]
+    """
+
     permission_classes = [
         IsAuthenticated,
     ]
