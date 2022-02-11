@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     # my app
     'blog.apps.BlogConfig',
     'account.apps.AccountConfig',
-    'blog_comment.apps.BlogCommentConfig',
+    'comment.apps.CommentConfig',
     'extensions',
     # install app
     'rest_framework',
@@ -191,7 +191,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Blog Api',
-    'DESCRIPTION': 'simple Blog with Django Rest Framework',
+    'DESCRIPTION': 'Simple Blog with Django Rest Framework',
     'VERSION': '1.0',
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',

@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class BlogCommentConfig(AppConfig):
+class CommentConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'blog_comment'
+    name = 'comment'
     verbose_name = "Comments"

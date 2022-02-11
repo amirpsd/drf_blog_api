@@ -5,6 +5,7 @@ from .models import User, PhoneOtp
 # Register your models here.
 
 
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         "phone", "first_name",
@@ -16,14 +17,9 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ("is_superuser", "is_staff", "pk")
 
 
+@admin.register(PhoneOtp)
 class PhoneOtpAdmin(admin.ModelAdmin):
     list_display = (
         "phone", "otp", "count", "verify",
     )
     search_fields = ("phone", "otp",)
-
-
-admin.site.register(User, UserAdmin)
-admin.site.register(PhoneOtp, PhoneOtpAdmin)
-
-

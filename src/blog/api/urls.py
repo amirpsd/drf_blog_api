@@ -1,21 +1,21 @@
 from django.urls import path
 
 from .views import (
-    BlogListApiView,
-    BlogCreateApiView,
-    BlogDetailUpdateDeleteApiView,
-    LikeBlogApiView,
-    CategoryBlogApiView,
-    CategoryListApiView,
+    BlogsList,
+    BlogCreate,
+    BlogDetailUpdateDelete,
+    LikeBlog,
+    CategoryBlog,
+    CategoryList,
 )
 
-app_name = 'blog-api'
+app_name = "blog-api"
 
 urlpatterns = [
-    path('', BlogListApiView.as_view(), name='list'),
-    path('create/', BlogCreateApiView.as_view(), name='create'),
-    path('category/list/', CategoryListApiView.as_view(), name="category-list"),
-    path('category/<slug:slug>/', CategoryBlogApiView.as_view(), name="category-blog"),
-    path('<slug:slug>/', BlogDetailUpdateDeleteApiView.as_view(), name='detail'),
-    path('like/<int:pk>/', LikeBlogApiView.as_view(), name='like'),
+    path("", BlogsList.as_view(), name="list"),
+    path("create/", BlogCreate.as_view(), name="create"),
+    path("category/list/", CategoryList.as_view(), name="category-list"),
+    path("category/<slug:slug>/", CategoryBlog.as_view(), name="category-blog"),
+    path("<slug:slug>/", BlogDetailUpdateDelete.as_view(), name="detail"),
+    path("like/<int:pk>/", LikeBlog.as_view(), name="like"),
 ]   

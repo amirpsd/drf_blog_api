@@ -32,7 +32,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('blog/', include('blog.urls', namespace='blog')),
-    path('comment/', include('blog_comment.urls')),
+    path('comment/', include('comment.urls')),
 
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),

@@ -5,7 +5,7 @@ from blog.models import Blog, Category
 # create serializers 
 
 
-class BlogListSerializer(serializers.ModelSerializer):
+class BlogsListSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField(method_name='get_author')
     category = serializers.SerializerMethodField(method_name='get_category')
 
@@ -35,7 +35,7 @@ class BlogCreateSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         many=True, 
         queryset=Category.objects.all(),
-        slug_field='id'
+        slug_field='id',
     )
 
     class Meta:
@@ -86,5 +86,5 @@ class CategoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = [
-            "parent", "title" 
+            "parent", "title",
         ]

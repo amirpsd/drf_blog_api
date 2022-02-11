@@ -1,5 +1,4 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 
 from rest_framework.generics import (
     ListAPIView,
@@ -13,7 +12,7 @@ from rest_framework.views import APIView
 from blog.models import Blog, Category
 from .pagination import BlogLimitOffsetPagination
 from .serializers import (
-    BlogListSerializer,
+    BlogsListSerializer,
     BlogCreateSerializer,
     BlogDetailUpdateDeleteSerializer,
     CategoryListSerializer,
@@ -24,28 +23,25 @@ from permissions import (
 )
 
 
-class BlogListApiView(ListAPIView):
-    serializer_class = BlogListSerializer
+class BlogsList(ListAPIView):
+    serializer_class = BlogsListSerializer
     pagination_class = BlogLimitOffsetPagination
     filterset_fields = [
-        'category',
-        'special',
+        "category", "special",
     ]
     search_fields = [
-        'title',
-        'summary',
-        'author__first_name',
+        "title", "summary",
+        "author__first_name",
     ]
     ordering_fields = (
-        'publish',
-        'special',
+        "publish", "special",
     )
 
     def get_queryset(self):
         return Blog.objects.publish()
 
 
-class BlogCreateApiView(CreateAPIView):
+class BlogCreate(CreateAPIView):
     serializer_class = BlogCreateSerializer
     permission_classes = [IsSuperUserOrAuthor,]
 
@@ -62,7 +58,7 @@ class BlogCreateApiView(CreateAPIView):
         return serializer.save(author=self.request.user)
 
 
-class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
+class BlogDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
     serializer_class = BlogDetailUpdateDeleteSerializer
     permission_classes = (IsSuperUserOrAuthorOrReadOnly,)
     lookup_field = "slug"
@@ -81,7 +77,7 @@ class BlogDetailUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
         return serializer.save()
 
 
-class LikeBlogApiView(APIView):
+class LikeBlog(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
@@ -104,8 +100,8 @@ class LikeBlogApiView(APIView):
         )
      
 
-class CategoryBlogApiView(ListAPIView):
-    serializer_class = BlogListSerializer
+class CategoryBlog(ListAPIView):
+    serializer_class = BlogsListSerializer
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -114,7 +110,7 @@ class CategoryBlogApiView(ListAPIView):
         return queryset
 
 
-class CategoryListApiView(ListAPIView):
+class CategoryList(ListAPIView):
     serializer_class = CategoryListSerializer
     lookup_field = 'slug'
     queryset = Category.objects.active()
