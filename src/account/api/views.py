@@ -1,3 +1,5 @@
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
@@ -319,12 +321,21 @@ class ChangeTwoStepPassword(APIView):
             serializer = ChangeTwoStepPasswordSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            user = get_object_or_404(get_user_model(), pk=request.user.pk)
+            new_password = serializer.data.get("new_password")
+
+            try:
+                _: None = validate_password(new_password)
+            except ValidationError as err:
+                return Response(
+                    {"errors":err},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
             old_password = serializer.data.get("old_password")
+            user = get_object_or_404(get_user_model(), pk=request.user.pk)
             check_password: bool = user.check_password(old_password)
 
             if check_password:
-                new_password = serializer.data.get("new_password")
                 user.set_password(new_password)
                 user.save(update_fields=["password"])
 
@@ -367,6 +378,14 @@ class CreateTwoStepPassword(APIView):
             serializer = CreateTwoStepPasswordSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             new_password = serializer.data.get("new_password")
+
+            try:
+                _: None = validate_password(new_password)
+            except ValidationError as err:
+                return Response(
+                    {"errors":err},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
 
             user = get_object_or_404(get_user_model(), pk=request.user.pk)
             user.set_password(new_password)
