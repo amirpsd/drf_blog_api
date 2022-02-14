@@ -63,7 +63,7 @@ Please enter the required information in the **.env** and **.env.db** files befo
 **create docker network**
 
 ```shell
-docker network create nginx_network1
+docker network create nginx_network
 docker network create blog_network
 ```
 
@@ -79,12 +79,30 @@ docker volume create db_data
 docker-compose up -d
 ```
 
+You currently have 3 containers running:
+
+- web, 
+- nginx 
+- db
+
+Now create a super user with a **web** container to access the Django admin panel.
+
+```shell
+docker exec -it web python3 manage.py createsuperuser
+```
+
+After creating a super user, go to http://127.0.0.1:80/account/api/login/.
+
+And after authentication, create the super user two-step password. http://127.0.0.1:80/account/api/create-two-step-password/
+
+Finally, go to the admin panel. http://127.0.0.1:80/admin/
+
 
 ## Endpoints
 
 You can see the [endpoints.yaml](https://github.com/amirpsd/drf_blog_api/blob/main/endpoints.yaml) file to see the exact details of the endpoints.
 
-or you can go to http://127.0.0.1:8000/api/schema/swagger-ui/ or http://127.0.0.1:8000/api/schema/redoc/
+or you can go to http://127.0.0.1:80/api/schema/swagger-ui/ or http://127.0.0.1:80/api/schema/redoc/
 to see the endpoints after running the project.
 
 
