@@ -18,7 +18,7 @@ services:
       
     networks:
       - blog_network
-      - nginx_network1
+      - nginx_network
     env_file:
       - "./.env"
 
@@ -44,7 +44,7 @@ services:
     ports:
       - "80:80"
     networks:
-      - nginx_network1
+      - nginx_network
     volumes:
       - type : "bind"
         source : './src/static/'
@@ -63,7 +63,7 @@ volumes:
     external: True
 
 networks:
-  nginx_network1:
+  nginx_network:
     external: True
   blog_network:
     external: True
