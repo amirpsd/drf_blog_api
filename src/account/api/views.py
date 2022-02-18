@@ -126,8 +126,19 @@ class Login(APIView):
         serializer = AuthenticationSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.data.get("phone")
-            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
 
+            user_otp, _ = PhoneOtp.objects.get_or_create(
+                phone=phone,
+            )
+            if user_otp.count >= 5:
+                return Response(
+                    {
+                        "Many Request": "You requested too much.",
+                    },
+                    status=status.HTTP_429_TOO_MANY_REQUESTS,
+                )
+
+            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
             if not user_is_exists:
                 return Response(
                     {
@@ -135,22 +146,14 @@ class Login(APIView):
                     },
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
+
             code = otp_generator()
-            user_otp, _ = PhoneOtp.objects.get_or_create(
-                phone=phone,
-            )
             user_otp.otp = code
-            user_otp.count += 1
-            user_otp.save(update_fields=["otp", "count"])
-            if user_otp.count >= 4:
-                return Response(
-                    {
-                        "Many Request": "You requested too much.",
-                    },
-                    status=status.HTTP_429_TOO_MANY_REQUESTS,
-                )
             cache.set(phone, code, 300)
             send_otp(phone=phone, otp=code) # Here the otp code must later be sent to the user's phone number by SMS system.
+            user_otp.count += 1
+            user_otp.save(update_fields=["otp", "count"])
+
             context = {
                 "code sent.": "The code has been sent to the desired phone number.",
             }
@@ -181,8 +184,19 @@ class Register(APIView):
         serializer = AuthenticationSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.data.get("phone")
-            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
 
+            user_otp, _ = PhoneOtp.objects.get_or_create(
+                phone=phone,
+            )
+            if user_otp.count >= 5:
+                return Response(
+                    {
+                        "Many Request": "You requested too much.",
+                    },
+                    status=status.HTTP_429_TOO_MANY_REQUESTS,
+                )
+                
+            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
             if user_is_exists:
                 return Response(
                     {
@@ -190,22 +204,14 @@ class Register(APIView):
                     },
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
+
             code = otp_generator()
-            user_otp, _ = PhoneOtp.objects.get_or_create(
-                phone=phone,
-            )
             user_otp.otp = code
-            user_otp.count += 1
-            user_otp.save(update_fields=["otp", "count"])
-            if user_otp.count >= 4:
-                return Response(
-                    {
-                        "Many Request": "You requested too much.",
-                    },
-                    status=status.HTTP_429_TOO_MANY_REQUESTS,
-                )
             cache.set(phone, code, 300)
             send_otp(phone=phone, otp=code) # Here the otp code must later be sent to the user's phone number by SMS system.
+            user_otp.count += 1
+            user_otp.save(update_fields=["otp", "count"])
+
             context = {
                 "code sent.": "The code has been sent to the desired phone number.",
             }
