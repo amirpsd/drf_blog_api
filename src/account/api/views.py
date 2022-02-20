@@ -27,7 +27,6 @@ from .serializers import (
 from ..models import PhoneOtp 
 from .send_otp import send_otp
 from permissions import IsSuperUser
-from extensions.code_generator import otp_generator
 
 
 class UsersList(ListAPIView):
@@ -125,10 +124,10 @@ class Login(APIView):
     def post(self, request):
         serializer = AuthenticationSerializer(data=request.data)
         if serializer.is_valid():
-            phone = serializer.data.get("phone")
+            received_phone = serializer.data.get("phone")
 
             user_otp, _ = PhoneOtp.objects.get_or_create(
-                phone=phone,
+                phone=received_phone,
             )
             if user_otp.count >= 5:
                 return Response(
@@ -138,7 +137,7 @@ class Login(APIView):
                     status=status.HTTP_429_TOO_MANY_REQUESTS,
                 )
 
-            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
+            user_is_exists: bool = get_user_model().objects.filter(phone=received_phone).values("phone").exists()
             if not user_is_exists:
                 return Response(
                     {
@@ -147,20 +146,12 @@ class Login(APIView):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
 
-            code = otp_generator()
-            user_otp.otp = code
-            cache.set(phone, code, 300)
-            send_otp(phone=phone, otp=code) # Here the otp code must later be sent to the user's phone number by SMS system.
-            user_otp.count += 1
-            user_otp.save(update_fields=["otp", "count"])
-
-            context = {
-                "code sent.": "The code has been sent to the desired phone number.",
-            }
-            return Response(
-                context, 
-                status=status.HTTP_200_OK,
+            # The otp code is sent to the user's phone number for authentication
+            return send_otp(
+                user_otp=user_otp,
+                phone=received_phone,
             )
+
         else:
             return Response(
                 serializer.errors, 
@@ -183,10 +174,10 @@ class Register(APIView):
     def post(self, request):
         serializer = AuthenticationSerializer(data=request.data)
         if serializer.is_valid():
-            phone = serializer.data.get("phone")
+            received_phone = serializer.data.get("phone")
 
             user_otp, _ = PhoneOtp.objects.get_or_create(
-                phone=phone,
+                phone=received_phone,
             )
             if user_otp.count >= 5:
                 return Response(
@@ -196,7 +187,7 @@ class Register(APIView):
                     status=status.HTTP_429_TOO_MANY_REQUESTS,
                 )
                 
-            user_is_exists: bool = get_user_model().objects.filter(phone=phone).values("phone").exists()
+            user_is_exists: bool = get_user_model().objects.filter(phone=received_phone).values("phone").exists()
             if user_is_exists:
                 return Response(
                     {
@@ -205,20 +196,12 @@ class Register(APIView):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
 
-            code = otp_generator()
-            user_otp.otp = code
-            cache.set(phone, code, 300)
-            send_otp(phone=phone, otp=code) # Here the otp code must later be sent to the user's phone number by SMS system.
-            user_otp.count += 1
-            user_otp.save(update_fields=["otp", "count"])
-
-            context = {
-                "code sent.": "The code has been sent to the desired phone number.",
-            }
-            return Response(
-                context, 
-                status=status.HTTP_200_OK,
+            # The otp code is sent to the user's phone number for authentication
+            return send_otp(
+                user_otp=user_otp,
+                phone=received_phone,
             )
+
         else:
             return Response(
                 serializer.errors, 
@@ -238,6 +221,7 @@ class VerifyOtp(APIView):
     permission_classes = [
         AllowAny,
     ]
+    # When the confirm_for_authentication attribute equals True, through jwt, the token is generated for authentication
     confirm_for_authentication = False
 
     def post(self, request):
