@@ -103,6 +103,7 @@ else:
             "PASSWORD": config("PASSWORD", default="1234"),
             "HOST": "db",
             "PORT": config("PORT"),
+            "CONN_MAX_AGE": 30,
         }
     }
 
@@ -197,3 +198,5 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
 }
+
+EXPIRY_TIME_OTP = 300  # Second
