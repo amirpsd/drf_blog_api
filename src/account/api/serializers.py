@@ -59,54 +59,39 @@ class OtpSerializer(serializers.Serializer):
     )
 
     def validate_code(self, value):
-        from string import ascii_letters as char
+        try:
+            int(value)
+        except ValueError as _:
+            raise serializers.ValidationError("Invalid Code.")
 
-        for _ in value:
-            if _ in char:
-                raise serializers.ValidationError("Invalid Code.")
         return value
 
 
-class ChangeTwoStepPasswordSerializer(serializers.Serializer):
+class CreateTwoStepPasswordSerializer(serializers.Serializer):
+    """
+        Base serializer two-step-password.
+    """
+    new_password = serializers.CharField(
+        max_length=20,
+    )
+
+    confirm_new_password = serializers.CharField(
+        max_length=20,
+    )
+
+    def validate(self, data):
+        password = data.get('new_password')
+        confirm_password = data.get('confirm_new_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError(
+                {"Error": "Your passwords didn't match."}
+            )
+
+        return data
+
+
+class ChangeTwoStepPasswordSerializer(CreateTwoStepPasswordSerializer):
     old_password = serializers.CharField(
         max_length=20,
     )
-    new_password = serializers.CharField(
-        max_length=20,
-    )
-
-    confirm_new_password = serializers.CharField(
-        max_length=20,
-    )
-
-    def validate(self, data):
-        password = data.get('new_password')
-        confirm_password = data.get('confirm_new_password')
-
-        if password != confirm_password:
-            raise serializers.ValidationError(
-                {"Error": "Your passwords didn't match."}
-            )
-
-        return data
-
-
-class CreateTwoStepPasswordSerializer(serializers.Serializer):
-    new_password = serializers.CharField(
-        max_length=20,
-    )
-
-    confirm_new_password = serializers.CharField(
-        max_length=20,
-    )
-
-    def validate(self, data):
-        password = data.get('new_password')
-        confirm_password = data.get('confirm_new_password')
-
-        if password != confirm_password:
-            raise serializers.ValidationError(
-                {"Error": "Your passwords didn't match."}
-            )
-
-        return data

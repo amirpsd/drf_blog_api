@@ -294,6 +294,51 @@ class VerifyOtp(APIView):
             )
 
 
+class CreateTwoStepPassword(APIView):
+    """
+    post:
+        Send a password to create a two-step-password.
+        
+        parameters: [new_password, confirm_new_password]
+    """
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request):
+        if not request.user.two_step_password:
+            serializer = CreateTwoStepPasswordSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            new_password = serializer.data.get("new_password")
+
+            try:
+                _: None = validate_password(new_password)
+            except ValidationError as err:
+                return Response(
+                    {"errors":err},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            user = get_object_or_404(get_user_model(), pk=request.user.pk)
+            user.set_password(new_password)
+            user.two_step_password = True
+            user.save(update_fields=["password", "two_step_password"])     
+            return Response(
+                {
+                    "Successful.":"Your password was changed successfully.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(
+            {
+                "Error!":"Your request could not be approved.",
+            },
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+
 class ChangeTwoStepPassword(APIView):
     """
     post:
@@ -342,51 +387,6 @@ class ChangeTwoStepPassword(APIView):
                     },
                     status=status.HTTP_406_NOT_ACCEPTABLE,
                 )
-
-        return Response(
-            {
-                "Error!":"Your request could not be approved.",
-            },
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
-
-
-class CreateTwoStepPassword(APIView):
-    """
-    post:
-        Send a password to create a two-step-password.
-        
-        parameters: [new_password, confirm_new_password]
-    """
-
-    permission_classes = [
-        IsAuthenticated,
-    ]
-
-    def post(self, request):
-        if not request.user.two_step_password:
-            serializer = CreateTwoStepPasswordSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            new_password = serializer.data.get("new_password")
-
-            try:
-                _: None = validate_password(new_password)
-            except ValidationError as err:
-                return Response(
-                    {"errors":err},
-                    status=status.HTTP_401_UNAUTHORIZED,
-                )
-
-            user = get_object_or_404(get_user_model(), pk=request.user.pk)
-            user.set_password(new_password)
-            user.two_step_password = True
-            user.save(update_fields=["password", "two_step_password"])     
-            return Response(
-                {
-                    "Successful.":"Your password was changed successfully.",
-                },
-                status=status.HTTP_200_OK,
-            )
 
         return Response(
             {
