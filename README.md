@@ -4,6 +4,7 @@
 
 This project is a Blog site written with **python3.9** and **Django3.2** and **Django_rest_framework_3.12** which is for using api.
 
+The purpose of this project was to see how a blog with **otp** authentication can be implemented using the django-rest-framework.
 
 ## Features
 
@@ -81,7 +82,7 @@ docker-compose up -d
 
 You currently have 3 containers running:
 
-- web, 
+- web
 - nginx 
 - db
 
