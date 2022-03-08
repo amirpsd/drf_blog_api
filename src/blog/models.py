@@ -41,7 +41,10 @@ class Blog(models.Model):
         help_text=_("Do not fill in here"),
     )
     body = models.TextField(blank=False, verbose_name=_("Content"))
-    image = models.ImageField(upload_to=upload_file_path, verbose_name=_("Image"))
+    image = models.ImageField(
+        upload_to=upload_file_path, blank=True,
+        null=True, verbose_name=_("Image"),
+    )
     summary = models.TextField(max_length=400, verbose_name=_("Summary"))
     likes = models.ManyToManyField(
         get_user_model(),
