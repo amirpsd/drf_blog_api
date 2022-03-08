@@ -9,7 +9,7 @@ from .views import (
     CategoryList,
 )
 
-app_name = "blog-api"
+app_name = "api"
 
 urlpatterns = [
     path("", BlogsList.as_view(), name="list"),

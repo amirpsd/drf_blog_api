@@ -80,7 +80,6 @@ class BlogDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
         Updates an existing post. Returns updated post data.
 
         parameters: exclude = [user, create, updated, likes]
-        ]
 
     delete:
         Delete an existing post.
@@ -92,9 +91,8 @@ class BlogDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsSuperUserOrAuthorOrReadOnly,)
     lookup_field = "slug"
 
-    def get_object(self):
-        blog = get_object_or_404(Blog, slug=self.kwargs.get("slug"))
-        return blog
+    def get_queryset(self):
+        return Blog.objects.publish()
 
     def perform_update(self, serializer):
         if not self.request.user.is_superuser:
