@@ -15,7 +15,6 @@ The purpose of this project was to see how a blog with **otp** authentication ca
 - Generate tokens using **simple-jwt** after authentication.
 - Production-ready configuration for Static Files, Database Settings, Gunicorn, Ngnix, Docker.
 - Easy installation.
-- Automatically delete photos after deleting the blog.
 - Ability to comment on blogs.
 - Use the PostgreSQL database to store data.
 
