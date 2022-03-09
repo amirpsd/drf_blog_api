@@ -30,9 +30,9 @@ from decouple import config
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', include('account.urls')),
+    path('account/', include('account.urls', namespace='account')),
     path('blog/', include('blog.urls', namespace='blog')),
-    path('comment/', include('comment.urls')),
+    path('comment/', include('comment.urls', namespace='comment')),
 
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),

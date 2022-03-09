@@ -102,4 +102,4 @@ class CommentUpdateDelete(APIView):
     def delete(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, user=request.user)
         comment.delete()
-        return Response(status.HTTP_204_NO_CONTENT,)
+        return Response(status=status.HTTP_204_NO_CONTENT,)

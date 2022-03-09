@@ -6,7 +6,7 @@ from .views import (
     CommentUpdateDelete,
     )
 
-app_name = "comment-api"
+app_name = "api"
 
 urlpatterns = [
     path("<int:pk>/", CommentsList.as_view(), name="list"),
