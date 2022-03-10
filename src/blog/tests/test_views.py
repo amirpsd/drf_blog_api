@@ -62,6 +62,14 @@ class BlogViewsTest(APITestCase):
             "category": ["1", ],
             "status": "p",
         }
+        self.updated_data = {
+            "title": "update-title-test-2",
+            "body": "update-body-test-2",
+            "summary": "update-summary-test-2",
+            "special": True,
+            "category": ["1", ],
+            "status": "p",
+        }
 
     def test_blogs_list(self):
         response = self.client.get(reverse("blog:api:list"))
@@ -71,7 +79,10 @@ class BlogViewsTest(APITestCase):
         self.assertEquals(content.get('results')[0]['title'], self.blog.title)
         self.assertEquals(
             content.get('results')[0]['author'], 
-            {'first_name': self.user1.first_name, 'last_name': self.user1.last_name,},
+            {
+                'first_name': self.user1.first_name, 
+                'last_name': self.user1.last_name,
+            },
         )
 
     def test_search_blogs_list(self):
@@ -94,7 +105,7 @@ class BlogViewsTest(APITestCase):
         )
         content = json.loads(response.content) 
 
-        self.assertEquals(content.get("status"), "p")
+        self.assertEquals(content.get("status"), self.valid_data.get("status"))
         self.assertTrue(content.get("special"))
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
 
@@ -138,58 +149,69 @@ class BlogViewsTest(APITestCase):
         response = self.client.get(path=path)
         self.assertQuerysetEqual(self.user2.blogs_like.all(), [])
 
-    def test_blog_detail_with_user1(self):
+    def test_blog_detail(self):
         path = reverse("blog:api:detail", kwargs={"slug": self.blog.slug})
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user1.access_token}")
-
         response = self.client.get(path=path) 
-        self.assertEquals(response.status_code, status.HTTP_200_OK)
-
-        response = self.client.put(
-            path=path,
-            data=self.valid_data,
-        )
-        content = json.loads(response.content)
-        self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(content.get("title"), self.valid_data.get("title"))
-
-        response = self.client.delete(path=path) 
-        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
-
-    def test_blog_detail_with_user2(self):
-        path = reverse("blog:api:detail", kwargs={"slug": self.blog.slug})
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user2.access_token}")
-
-        response = self.client.get(path=path) 
-        self.assertEquals(response.status_code, status.HTTP_200_OK)
-        
-        response = self.client.put(
-            path=path,
-            data=self.valid_data,
-        )
-        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.delete(path=path) 
-        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_blog_detail_with_user3(self):
-        path = reverse("blog:api:detail", kwargs={"slug": self.blog.slug})
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user3.access_token}")
-
-        response = self.client.get(path=path)
         content = json.loads(response.content)
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEquals(content.get("title"), self.blog.title)
 
+        path = reverse("blog:api:detail", kwargs={"slug": "test"})
+        response = self.client.get(path=path) 
+        self.assertEquals(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_blog_update(self):
+        path = reverse("blog:api:detail", kwargs={"slug": self.blog.slug})
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user1.access_token}")
         response = self.client.put(
-            path=path, 
+            path=path,
             data=self.valid_data,
-        ) 
+        )
+        content = json.loads(response.content) 
+        self.assertEquals(content.get("title"), self.valid_data.get("title"))
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user2.access_token}")
+        response = self.client.put(
+            path=path,
+            data=self.valid_data,
+        )
         self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.delete(path=path) 
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user3.access_token}")
+        response = self.client.put(
+            path=path,
+            data=self.valid_data,
+        )
         self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_blog_delete_with_user1(self):
+        path = reverse("blog:api:detail", kwargs={"slug": self.blog.slug})
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user1.access_token}")
+        response = self.client.delete(
+            path=path,
+        )
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_blog_delete_with_user2(self):
+        path = reverse("blog:api:detail", kwargs={"slug": self.blog.slug})
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user2.access_token}")
+        response = self.client.delete(
+            path=path,
+        )
+        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_blog_delete_with_user3(self):
+        path = reverse("blog:api:detail", kwargs={"slug": self.blog.slug})
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.refresh_for_user3.access_token}")
+        response = self.client.delete(
+            path=path,
+        )
+        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class CategoryViewsTest(APITestCase):
