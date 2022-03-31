@@ -67,21 +67,21 @@ class OtpSerializer(serializers.Serializer):
         return value
 
 
-class CreateTwoStepPasswordSerializer(serializers.Serializer):
+class GetTwoStepPasswordSerializer(serializers.Serializer):
     """
         Base serializer two-step-password.
     """
-    new_password = serializers.CharField(
+    password = serializers.CharField(
         max_length=20,
     )
 
-    confirm_new_password = serializers.CharField(
+    confirm_password = serializers.CharField(
         max_length=20,
     )
 
     def validate(self, data):
-        password = data.get('new_password')
-        confirm_password = data.get('confirm_new_password')
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
 
         if password != confirm_password:
             raise serializers.ValidationError(
@@ -91,7 +91,7 @@ class CreateTwoStepPasswordSerializer(serializers.Serializer):
         return data
 
 
-class ChangeTwoStepPasswordSerializer(CreateTwoStepPasswordSerializer):
+class ChangeTwoStepPasswordSerializer(GetTwoStepPasswordSerializer):
     old_password = serializers.CharField(
         max_length=20,
     )

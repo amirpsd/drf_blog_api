@@ -12,7 +12,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import (
@@ -22,7 +21,7 @@ from .serializers import (
     AuthenticationSerializer,
     OtpSerializer,
     ChangeTwoStepPasswordSerializer,
-    CreateTwoStepPasswordSerializer,
+    GetTwoStepPasswordSerializer,
 )
 from ..models import PhoneOtp 
 from .send_otp import send_otp
@@ -308,9 +307,9 @@ class CreateTwoStepPassword(APIView):
 
     def post(self, request):
         if not request.user.two_step_password:
-            serializer = CreateTwoStepPasswordSerializer(data=request.data)
+            serializer = GetTwoStepPasswordSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            new_password = serializer.data.get("new_password")
+            new_password = serializer.data.get("password")
 
             try:
                 _: None = validate_password(new_password)
@@ -356,7 +355,7 @@ class ChangeTwoStepPassword(APIView):
             serializer = ChangeTwoStepPasswordSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            new_password = serializer.data.get("new_password")
+            new_password = serializer.data.get("password")
 
             try:
                 _: None = validate_password(new_password)
@@ -394,3 +393,48 @@ class ChangeTwoStepPassword(APIView):
             },
             status=status.HTTP_401_UNAUTHORIZED,
         )
+
+
+class DeleteAccount(APIView):
+    """
+    delete:
+        Delete an existing User instance.
+    """
+    
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def delete(self, request):
+        user = get_user_model().objects.get(pk=request.user.pk)
+        if not request.user.two_step_password:
+            user.delete()
+            return Response(
+                {
+                    "Removed successfully.": "Your account has been successfully deleted.",
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        else:
+            serializer = GetTwoStepPasswordSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            password = serializer.data.get("password")
+            check_password: bool = user.check_password(password)
+
+            if check_password:
+                user.delete()
+
+                return Response(
+                    {
+                        "Removed successfully.": "Your account has been successfully deleted.",
+                    },
+                    status=status.HTTP_204_NO_CONTENT,
+                )
+            else:
+                return Response(
+                    {
+                        "Error!": "The password entered is incorrect.",
+                    },
+                    status=status.HTTP_406_NOT_ACCEPTABLE,
+                )
