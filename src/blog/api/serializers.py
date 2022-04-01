@@ -16,7 +16,7 @@ class BlogsListSerializer(serializers.ModelSerializer):
         }
 
     def get_category(self,obj):
-        category = [cat.title for cat in obj.category.get_queryset()]
+        category = [cat.title for cat in obj.category.get_queryset().only("title")]
         return category
 
     class Meta:

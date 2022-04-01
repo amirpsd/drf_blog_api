@@ -57,9 +57,7 @@ class BlogCreate(CreateAPIView):
 
     serializer_class = BlogCreateSerializer
     permission_classes = [IsSuperUserOrAuthor,]
-
-    def get_queryset(self):
-        return Blog.objects.publish()
+    queryset = Blog.objects.all()
 
     def perform_create(self, serializer):
         if not self.request.user.is_superuser:
