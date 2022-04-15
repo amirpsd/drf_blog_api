@@ -40,7 +40,7 @@ class PhoneOtpAdmin(admin.ModelAdmin):
         "verify", 
     )
     ordering = (
-        "-verify", "-count",
+        "verify", "-count",
     )
-    list_per_page = 506
+    list_per_page = 25
 
