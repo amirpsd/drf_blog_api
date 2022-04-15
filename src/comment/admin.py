@@ -6,6 +6,16 @@ from .models import Comment
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'create', 'updated', 'body')
-    list_per_page = 30
+    list_display = (
+        'user', 'name', 
+        'create', 'updated', 
+        'body',
+    )
+    list_filter = (
+        "create",
+    )
+    search_fields = (
+        "name", "body",
+    )
+    list_per_page = 25
 
