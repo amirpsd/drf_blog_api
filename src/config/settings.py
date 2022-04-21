@@ -193,7 +193,11 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.MultiPartRenderer',
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.TemplateHTMLRenderer',
-    ]
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        "authentication": "5/hour",
+        "verify_authentication": "8/hour",
+    }
 }
 
 SPECTACULAR_SETTINGS = {

@@ -9,6 +9,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -119,22 +120,15 @@ class Login(APIView):
     permission_classes = [
         AllowAny,
     ]
+    throttle_scope = "authentication"
+    throttle_classes = [
+        ScopedRateThrottle,
+    ]
 
     def post(self, request):
         serializer = AuthenticationSerializer(data=request.data)
         if serializer.is_valid():
             received_phone = serializer.data.get("phone")
-
-            user_otp, _ = PhoneOtp.objects.get_or_create(
-                phone=received_phone,
-            )
-            if user_otp.count >= 5:
-                return Response(
-                    {
-                        "Many Request": "You requested too much.",
-                    },
-                    status=status.HTTP_429_TOO_MANY_REQUESTS,
-                )
 
             user_is_exists: bool = get_user_model().objects.filter(phone=received_phone).values("phone").exists()
             if not user_is_exists:
@@ -147,7 +141,6 @@ class Login(APIView):
 
             # The otp code is sent to the user's phone number for authentication
             return send_otp(
-                user_otp=user_otp,
                 phone=received_phone,
             )
 
@@ -169,23 +162,16 @@ class Register(APIView):
     permission_classes = [
         AllowAny,
     ]
+    throttle_scope = "authentication"
+    throttle_classes = [
+        ScopedRateThrottle,
+    ]
 
     def post(self, request):
         serializer = AuthenticationSerializer(data=request.data)
         if serializer.is_valid():
             received_phone = serializer.data.get("phone")
-
-            user_otp, _ = PhoneOtp.objects.get_or_create(
-                phone=received_phone,
-            )
-            if user_otp.count >= 5:
-                return Response(
-                    {
-                        "Many Request": "You requested too much.",
-                    },
-                    status=status.HTTP_429_TOO_MANY_REQUESTS,
-                )
-                
+ 
             user_is_exists: bool = get_user_model().objects.filter(phone=received_phone).values("phone").exists()
             if user_is_exists:
                 return Response(
@@ -197,7 +183,6 @@ class Register(APIView):
 
             # The otp code is sent to the user's phone number for authentication
             return send_otp(
-                user_otp=user_otp,
                 phone=received_phone,
             )
 
@@ -222,6 +207,10 @@ class VerifyOtp(APIView):
     ]
     # When the confirm_for_authentication attribute equals True, through jwt, the token is generated for authentication
     confirm_for_authentication = False
+    throttle_scope = "verify_authentication"
+    throttle_classes = [
+        ScopedRateThrottle,
+    ]
 
     def post(self, request):
         serializer = OtpSerializer(data=request.data)
@@ -261,8 +250,8 @@ class VerifyOtp(APIView):
                     if self.confirm_for_authentication:
                         refresh = RefreshToken.for_user(user)
                         cache.delete(object.phone)
-                        object.verify, object.count = True, 0
-                        object.save(update_fields=["verify", "count"])
+                        object.verify = True
+                        object.save(update_fields=["verify"])
                         context = {
                             "created": created,
                             "refresh": str(refresh),

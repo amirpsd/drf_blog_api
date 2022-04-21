@@ -72,7 +72,6 @@ class PhoneOtp(models.Model):
     )
     otp = models.CharField(max_length=6)
 
-    count = models.PositiveSmallIntegerField(default=0, help_text=_("Number of otp sent"))
     verify = models.BooleanField(default=False, verbose_name=_("is verify"))
 
 

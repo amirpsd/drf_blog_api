@@ -31,7 +31,7 @@ class UserAdmin(admin.ModelAdmin):
 class PhoneOtpAdmin(admin.ModelAdmin):
     list_display = (
         "phone", "otp", 
-        "count", "verify",
+        "verify",
     )
     search_fields = (
         "phone", "otp",
@@ -40,7 +40,7 @@ class PhoneOtpAdmin(admin.ModelAdmin):
         "verify", 
     )
     ordering = (
-        "verify", "-count",
+        "verify",
     )
     list_per_page = 25
 

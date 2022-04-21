@@ -7,7 +7,7 @@ from .views import (
     DeleteAccount,
 )
 
-app_name = "account-api"
+app_name = "api"
 
 urlpatterns = [
     path("", UsersList.as_view(), name="users-list"),
