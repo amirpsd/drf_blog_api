@@ -24,8 +24,8 @@ from .serializers import (
     ChangeTwoStepPasswordSerializer,
     GetTwoStepPasswordSerializer,
 )
-from ..models import PhoneOtp 
 from .send_otp import send_otp
+from extensions.get_client_ip import get_client_ip
 from permissions import IsSuperUser
 
 
@@ -52,7 +52,11 @@ class UsersList(ListAPIView):
     )
 
     def get_queryset(self):
-        return get_user_model().objects.all()
+        return get_user_model().objects.values(
+            "id", "phone",
+            "first_name", "last_name",
+            "author",
+        )
 
 
 class UsersDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
@@ -80,7 +84,12 @@ class UsersDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         pk = self.kwargs.get("pk")
-        user = get_object_or_404(get_user_model(), pk=pk)
+        user = get_object_or_404(
+            get_user_model().objects.defer(
+                "password",
+            ),
+            pk=pk,
+        )
         return user
 
 
@@ -141,6 +150,7 @@ class Login(APIView):
 
             # The otp code is sent to the user's phone number for authentication
             return send_otp(
+                request,
                 phone=received_phone,
             )
 
@@ -183,6 +193,7 @@ class Register(APIView):
 
             # The otp code is sent to the user's phone number for authentication
             return send_otp(
+                request,
                 phone=received_phone,
             )
 
@@ -216,22 +227,13 @@ class VerifyOtp(APIView):
         serializer = OtpSerializer(data=request.data)
         if serializer.is_valid():
             received_code = serializer.data.get("code")
-            query = PhoneOtp.objects.filter(otp=received_code)
+            ip = get_client_ip(request)
+            phone = cache.get(ip)
+            otp = cache.get(phone)
 
-            if not query.exists():
-                return Response(
-                    {
-                        "Incorrect code.": "The code entered is incorrect.",
-                    },
-                    status=status.HTTP_406_NOT_ACCEPTABLE,
-                )
-
-            object = query.first()
-            code_in_cache = cache.get(object.phone)
-
-            if code_in_cache is not None:
-                if code_in_cache == received_code:
-                    user, created = get_user_model().objects.get_or_create(phone=object.phone)
+            if otp is not None:
+                if otp == received_code:
+                    user, created = get_user_model().objects.get_or_create(phone=phone)
                     if user.two_step_password:
                         password = serializer.data.get("password")
                         check_password: bool = user.check_password(password)
@@ -249,9 +251,9 @@ class VerifyOtp(APIView):
 
                     if self.confirm_for_authentication:
                         refresh = RefreshToken.for_user(user)
-                        cache.delete(object.phone)
-                        object.verify = True
-                        object.save(update_fields=["verify"])
+                        cache.delete(phone)
+                        cache.delete(ip)
+
                         context = {
                             "created": created,
                             "refresh": str(refresh),
@@ -308,7 +310,10 @@ class CreateTwoStepPassword(APIView):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
 
-            user = get_object_or_404(get_user_model(), pk=request.user.pk)
+            user = get_object_or_404(
+                get_user_model(),
+                pk=request.user.pk,
+            )
             user.set_password(new_password)
             user.two_step_password = True
             user.save(update_fields=["password", "two_step_password"])     
@@ -355,7 +360,10 @@ class ChangeTwoStepPassword(APIView):
                 )
 
             old_password = serializer.data.get("old_password")
-            user = get_object_or_404(get_user_model(), pk=request.user.pk)
+            user = get_object_or_404(
+                get_user_model(), 
+                pk=request.user.pk,
+            )
             check_password: bool = user.check_password(old_password)
 
             if check_password:

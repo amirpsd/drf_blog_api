@@ -4,19 +4,16 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..models import PhoneOtp 
 from extensions.code_generator import otp_generator
+from extensions.get_client_ip import get_client_ip
 
 
 # send otp code 
 
-def send_otp(*, phone: str):
-    user_otp, _ = PhoneOtp.objects.get_or_create(
-        phone=phone,
-    )
+def send_otp(request, phone):
     otp = otp_generator()
-    user_otp.otp = otp
-    user_otp.save(update_fields=["otp"])
+    ip = get_client_ip(request)
+    cache.set(ip, phone, settings.EXPIRY_TIME_OTP)
     cache.set(phone, otp, settings.EXPIRY_TIME_OTP)
 
     # Here the otp code must later be sent to the user's phone number by SMS system.
