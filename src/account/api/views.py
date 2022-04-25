@@ -25,7 +25,7 @@ from .serializers import (
     GetTwoStepPasswordSerializer,
 )
 from .send_otp import send_otp
-from extensions.get_client_ip import get_client_ip
+from extensions.utils import get_client_ip
 from permissions import IsSuperUser
 
 

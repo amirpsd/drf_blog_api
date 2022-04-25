@@ -2,7 +2,7 @@ from django.db.models.signals import pre_save
 from django.utils.text import slugify
 from django.dispatch import receiver
 
-from extensions.code_generator import slug_generator
+from extensions.utils import slug_generator
 
 from .models import Blog
 

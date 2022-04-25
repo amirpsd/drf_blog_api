@@ -4,11 +4,11 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 
-from extensions.code_generator import otp_generator
-from extensions.get_client_ip import get_client_ip
+from extensions.utils import otp_generator, get_client_ip
 
 
-# send otp code 
+# send otp code
+
 
 def send_otp(request, phone):
     otp = otp_generator()
@@ -25,6 +25,6 @@ def send_otp(request, phone):
         "code sent.": "The code has been sent to the desired phone number.",
     }
     return Response(
-        context, 
+        context,
         status=status.HTTP_200_OK,
     )

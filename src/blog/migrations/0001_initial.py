@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import extensions.upload_file_path
+import extensions.utils
 
 
 class Migration(migrations.Migration):
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=200, verbose_name='Title')),
                 ('slug', models.SlugField(blank=True, help_text='Do not fill in here', unique=True, verbose_name='Slug')),
                 ('body', models.TextField(verbose_name='Content')),
-                ('image', models.ImageField(blank=True, null=True, upload_to=extensions.upload_file_path.upload_file_path, verbose_name='Image')),
+                ('image', models.ImageField(blank=True, null=True, upload_to=extensions.utils.upload_file_path, verbose_name='Image')),
                 ('summary', models.TextField(max_length=400, verbose_name='Summary')),
                 ('publish', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Publish time')),
                 ('create', models.DateTimeField(auto_now_add=True, verbose_name='Create time')),

@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db import models
 
-from extensions.upload_file_path import upload_file_path
+from extensions.utils import upload_file_path
 
 from .managers import BlogManager, CategoryManager
 
