@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from blog.models import Blog, Category
-from .pagination import BlogLimitOffsetPagination
 from .serializers import (
     BlogsListSerializer,
     BlogCreateSerializer,
@@ -30,7 +29,6 @@ class BlogsList(ListAPIView):
     """
 
     serializer_class = BlogsListSerializer
-    pagination_class = BlogLimitOffsetPagination
     filterset_fields = [
         "category", "special",
     ]

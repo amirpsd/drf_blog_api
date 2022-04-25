@@ -197,7 +197,9 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         "authentication": "5/hour",
         "verify_authentication": "8/hour",
-    }
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20,
 }
 
 SPECTACULAR_SETTINGS = {
