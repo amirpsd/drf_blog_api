@@ -198,7 +198,7 @@ REST_FRAMEWORK = {
         "authentication": "5/hour",
         "verify_authentication": "8/hour",
     },
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'config.utils.custom_pagination.CustomPagination',
     'PAGE_SIZE': 20,
 }
 
