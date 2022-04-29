@@ -9,8 +9,8 @@ ADD ./src /src
 
 # install dependencies
 RUN pip3 install --upgrade pip
-ADD ./requirements/requirements.txt /src
-RUN pip3 install -r requirements.txt
+ADD ./requirements /requirements
+RUN pip3 install -r /requirements/production.txt
 
 CMD python3 manage.py makemigrations --noinput && \
     python3 manage.py migrate --noinput && \
