@@ -27,7 +27,7 @@ class CommentTest(TestCase):
             user=self.user,
             name="test-name-1",
             content_type=ContentType.objects.get_for_model(self.blog),
-            object_id=1,
+            object_id=self.blog.pk,
             parent=None,
             body="test-body-1",
         )
@@ -35,7 +35,7 @@ class CommentTest(TestCase):
             user=self.user,
             name="test-name-2",
             content_type=ContentType.objects.get_for_model(self.blog),
-            object_id=1,
+            object_id=self.blog.pk,
             parent=self.comment1,
             body="test-body-2",
         )
@@ -57,6 +57,6 @@ class CommentTest(TestCase):
 
     def test_model_manager(self):
         query = Comment.objects.filter_by_instance(self.blog)
-        self.assertQuerysetEqual(query, [ self.comment2, self.comment1])
+        self.assertQuerysetEqual(query, [self.comment2, self.comment1])
 
   
