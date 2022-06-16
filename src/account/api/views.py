@@ -208,16 +208,13 @@ class VerifyOtp(APIView):
     """
     post:
         Send otp code to verify mobile number and complete authentication.
-        If the user has a 2-step password, he must also send a password.
 
-        parameters: [otp, password]
+        parameters: [otp,]
     """
 
     permission_classes = [
         AllowAny,
     ]
-    # When the confirm_for_authentication attribute equals True, through jwt, the token is generated for authentication
-    confirm_for_authentication = False
     throttle_scope = "verify_authentication"
     throttle_classes = [
         ScopedRateThrottle,
@@ -228,41 +225,38 @@ class VerifyOtp(APIView):
         if serializer.is_valid():
             received_code = serializer.data.get("code")
             ip = get_client_ip(request)
-            phone = cache.get(ip)
+            phone = cache.get(f"{ip}-for-authentication")
             otp = cache.get(phone)
 
             if otp is not None:
                 if otp == received_code:
                     user, created = get_user_model().objects.get_or_create(phone=phone)
                     if user.two_step_password:
-                        password = serializer.data.get("password")
-                        check_password: bool = user.check_password(password)
-                        if check_password:
-                            self.confirm_for_authentication = True
-                        else:
-                            return Response(
-                                {
-                                    "Incorrect password.": "The password entered is incorrect.",
-                                },
-                                status=status.HTTP_406_NOT_ACCEPTABLE,
-                            )
-                    else:
-                        self.confirm_for_authentication = True
-
-                    if self.confirm_for_authentication:
-                        refresh = RefreshToken.for_user(user)
-                        cache.delete(phone)
-                        cache.delete(ip)
-
-                        context = {
-                            "created": created,
-                            "refresh": str(refresh),
-                            "access": str(refresh.access_token),
-                        }
+                        cache.set(f"{ip}-for-two-step-password", user, 250)
                         return Response(
-                            context, 
+                            {
+                                "Thanks": "Please enter your two-step password",
+                            },
                             status=status.HTTP_200_OK,
                         )
+
+                    refresh = RefreshToken.for_user(user)
+                    cache.delete(phone)
+                    cache.delete(f"{ip}-for-authentication")
+
+                    context = {
+                        "created": created,
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                    }
+                    return Response(
+                        context,
+                            context, 
+                        context,
+                            context, 
+                        context,
+                        status=status.HTTP_200_OK,
+                    )
                 else:
                     return Response(
                         {
@@ -277,6 +271,60 @@ class VerifyOtp(APIView):
                     },
                     status=status.HTTP_408_REQUEST_TIMEOUT,
                 )
+        else:
+            return Response(
+                serializer.errors, 
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class VerifyTwoStepPassword(APIView):
+    """
+    post:
+        Send two-step-password to verify and complete authentication.
+
+        parameters: [password, confirm_password,]
+    """
+
+    permission_classes = [
+        AllowAny,
+    ]
+
+    def post(self, request):
+        serializer = GetTwoStepPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            ip = get_client_ip(request)
+            user = cache.get(f"{ip}-for-two-step-password")
+            
+            if user is not None:
+                password = serializer.data.get("password")
+                check_password: bool = user.check_password(password)
+
+                if check_password:
+                    refresh = RefreshToken.for_user(user)
+                    cache.delete(f"{ip}-for-two-step-password")
+
+                    context = {
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                    }
+                    return Response(
+                        context,
+                        status=status.HTTP_200_OK,
+                    )
+                else:
+                    return Response(
+                        {
+                            "Error!": "The password entered is incorrect",
+                        },
+                        status=status.HTTP_406_NOT_ACCEPTABLE,
+                    )
+            return Response(
+                {
+                    "User expired": "The two-step-password entry time has elapsed",
+                },
+                status=status.HTTP_408_REQUEST_TIMEOUT,
+            )
         else:
             return Response(
                 serializer.errors, 

@@ -23,6 +23,7 @@ class UserDetailUpdateDeleteSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     phone = serializers.ReadOnlyField()
+    two_step_password = serializers.ReadOnlyField()
 
     class Meta:
         model = get_user_model()
@@ -52,10 +53,6 @@ class OtpSerializer(serializers.Serializer):
     code = serializers.CharField(
         max_length=6,
         min_length=6,
-    )
-    password = serializers.CharField(
-        max_length=20,
-        required=False,
     )
 
     def validate_code(self, value):

@@ -13,16 +13,14 @@ from extensions.utils import otp_generator, get_client_ip
 def send_otp(request, phone):
     otp = otp_generator()
     ip = get_client_ip(request)
-    cache.set(ip, phone, settings.EXPIRY_TIME_OTP)
+    cache.set(f"{ip}-for-authentication", phone, settings.EXPIRY_TIME_OTP)
     cache.set(phone, otp, settings.EXPIRY_TIME_OTP)
 
-    # Here the otp code must later be sent to the user's phone number by SMS system.
-    print(f"your phone: {phone}")
-    print(f"your otp code :: {otp} ")
-    # But in debug mode we print the otp code.
+    # TODO Here the otp code must later be sent to the user's phone number by SMS system.
+    # But in debug mode we return the otp code.
 
     context = {
-        "code sent.": "The code has been sent to the desired phone number.",
+        "otp": f"{otp}",
     }
     return Response(
         context,
