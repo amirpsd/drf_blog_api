@@ -251,10 +251,6 @@ class VerifyOtp(APIView):
                     }
                     return Response(
                         context,
-                            context, 
-                        context,
-                            context, 
-                        context,
                         status=status.HTTP_200_OK,
                     )
                 else:
