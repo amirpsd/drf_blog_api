@@ -162,6 +162,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.User'
 
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 # email settings
 EMAIL_BACKEND = config("EMAIL_BACKEND")
