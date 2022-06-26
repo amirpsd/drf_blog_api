@@ -21,6 +21,12 @@ paths:
         description: Which field to use when ordering the results.
         schema:
           type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       - name: search
         required: false
         in: query
@@ -37,9 +43,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UsersList'
+                $ref: '#/components/schemas/PaginatedUsersListList'
           description: ''
   /account/api/change-two-step-password/:
     post:
@@ -73,6 +77,20 @@ paths:
       responses:
         '200':
           description: No response body
+  /account/api/delete-account/:
+    delete:
+      operationId: account_api_delete_account_destroy
+      description: |-
+        delete:
+            Delete an existing User instance.
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
   /account/api/login/:
     post:
       operationId: account_api_login_create
@@ -100,12 +118,7 @@ paths:
         put:
             Update the detail of a user instance
 
-            parameters: exclude[password,]
-
-        delete:
-            Delete user account.
-
-            parameters: [pk]
+            parameters: [first_name, last_name,]
       tags:
       - account
       security:
@@ -127,12 +140,7 @@ paths:
         put:
             Update the detail of a user instance
 
-            parameters: exclude[password,]
-
-        delete:
-            Delete user account.
-
-            parameters: [pk]
+            parameters: [first_name, last_name,]
       tags:
       - account
       requestBody:
@@ -165,12 +173,7 @@ paths:
         put:
             Update the detail of a user instance
 
-            parameters: exclude[password,]
-
-        delete:
-            Delete user account.
-
-            parameters: [pk]
+            parameters: [first_name, last_name,]
       tags:
       - account
       requestBody:
@@ -194,29 +197,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserProfile'
           description: ''
-    delete:
-      operationId: account_api_profile_destroy
-      description: |-
-        get:
-            Returns the profile of user.
-
-        put:
-            Update the detail of a user instance
-
-            parameters: exclude[password,]
-
-        delete:
-            Delete user account.
-
-            parameters: [pk]
-      tags:
-      - account
-      security:
-      - cookieAuth: []
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
   /account/api/register/:
     post:
       operationId: account_api_register_create
@@ -400,9 +380,25 @@ paths:
       description: |-
         post:
             Send otp code to verify mobile number and complete authentication.
-            If the user has a 2-step password, he must also send a password.
 
-            parameters: [otp, password]
+            parameters: [otp,]
+      tags:
+      - account
+      security:
+      - cookieAuth: []
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /account/api/verify-two-step-password/:
+    post:
+      operationId: account_api_verify_two_step_password_create
+      description: |-
+        post:
+            Send two-step-password to verify and complete authentication.
+
+            parameters: [password, confirm_password,]
       tags:
       - account
       security:
@@ -624,24 +620,18 @@ paths:
             type: integer
         explode: true
         style: form
-      - name: limit
-        required: false
-        in: query
-        description: Number of results to return per page.
-        schema:
-          type: integer
-      - name: offset
-        required: false
-        in: query
-        description: The initial index from which to return the results.
-        schema:
-          type: integer
       - name: ordering
         required: false
         in: query
         description: Which field to use when ordering the results.
         schema:
           type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       - name: search
         required: false
         in: query
@@ -675,7 +665,6 @@ paths:
             Updates an existing post. Returns updated post data.
 
             parameters: exclude = [user, create, updated, likes]
-            ]
 
         delete:
             Delete an existing post.
@@ -709,7 +698,6 @@ paths:
             Updates an existing post. Returns updated post data.
 
             parameters: exclude = [user, create, updated, likes]
-            ]
 
         delete:
             Delete an existing post.
@@ -755,7 +743,6 @@ paths:
             Updates an existing post. Returns updated post data.
 
             parameters: exclude = [user, create, updated, likes]
-            ]
 
         delete:
             Delete an existing post.
@@ -800,7 +787,6 @@ paths:
             Updates an existing post. Returns updated post data.
 
             parameters: exclude = [user, create, updated, likes]
-            ]
 
         delete:
             Delete an existing post.
@@ -835,6 +821,12 @@ paths:
         description: Which field to use when ordering the results.
         schema:
           type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       - name: search
         required: false
         in: query
@@ -856,9 +848,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BlogsList'
+                $ref: '#/components/schemas/PaginatedBlogsListList'
           description: ''
   /blog/api/category/list/:
     get:
@@ -875,6 +865,12 @@ paths:
         description: Which field to use when ordering the results.
         schema:
           type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       - name: search
         required: false
         in: query
@@ -891,9 +887,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CategoryList'
+                $ref: '#/components/schemas/PaginatedCategoryListList'
           description: ''
   /blog/api/create/:
     post:
@@ -1055,6 +1049,7 @@ components:
         image:
           type: string
           format: uri
+          nullable: true
         summary:
           type: string
           maxLength: 400
@@ -1074,7 +1069,6 @@ components:
       required:
       - body
       - category
-      - image
       - status
       - summary
       - title
@@ -1103,6 +1097,7 @@ components:
         image:
           type: string
           format: uri
+          nullable: true
         summary:
           type: string
           maxLength: 400
@@ -1117,6 +1112,8 @@ components:
           $ref: '#/components/schemas/StatusEnum'
         visits:
           type: integer
+          maximum: 2147483647
+          minimum: 0
         category:
           type: array
           items:
@@ -1127,7 +1124,6 @@ components:
       - author
       - body
       - id
-      - image
       - likes
       - slug
       - status
@@ -1153,13 +1149,13 @@ components:
         image:
           type: string
           format: uri
+          nullable: true
         summary:
           type: string
           maxLength: 400
       required:
       - author
       - category
-      - image
       - summary
       - title
     CategoryList:
@@ -1184,16 +1180,56 @@ components:
           type: string
           nullable: true
           format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
+          example: http://api.example.org/accounts/?page=4
         previous:
           type: string
           nullable: true
           format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
+          example: http://api.example.org/accounts/?page=2
         results:
           type: array
           items:
             $ref: '#/components/schemas/BlogsList'
+    PaginatedCategoryListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryList'
+    PaginatedUsersListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersList'
     PatchedBlogDetailUpdateDelete:
       type: object
       properties:
@@ -1219,6 +1255,7 @@ components:
         image:
           type: string
           format: uri
+          nullable: true
         summary:
           type: string
           maxLength: 400
@@ -1233,6 +1270,8 @@ components:
           $ref: '#/components/schemas/StatusEnum'
         visits:
           type: integer
+          maximum: 2147483647
+          minimum: 0
         category:
           type: array
           items:
@@ -1308,6 +1347,7 @@ components:
         two_step_password:
           type: boolean
           description: is active two step password?
+          readOnly: true
     StatusEnum:
       enum:
       - p
@@ -1405,9 +1445,11 @@ components:
         two_step_password:
           type: boolean
           description: is active two step password?
+          readOnly: true
       required:
       - id
       - phone
+      - two_step_password
     UsersList:
       type: object
       properties:
