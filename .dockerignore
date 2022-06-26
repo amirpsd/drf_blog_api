@@ -1,0 +1,15 @@
+# Byte-compiled
+src/**/*__pycache__
+src/**/*.pyc
+
+# Unit test / coverage reports
+src/.coverage
+src/.coveragerc
+src/htmlcov
+
+# Sqlite
+src/db.sqlite3
+
+# Environments
+src/env/
+src/venv/
