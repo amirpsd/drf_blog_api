@@ -6,6 +6,7 @@ from django.core.cache import cache
 
 from rest_framework.generics import (
     ListAPIView,
+    RetrieveUpdateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -93,7 +94,7 @@ class UsersDetailUpdateDelete(RetrieveUpdateDestroyAPIView):
         return user
 
 
-class UserProfile(RetrieveUpdateDestroyAPIView):
+class UserProfile(RetrieveUpdateAPIView):
     """
     get:
         Returns the profile of user.
@@ -101,12 +102,7 @@ class UserProfile(RetrieveUpdateDestroyAPIView):
     put:
         Update the detail of a user instance
 
-        parameters: exclude[password,]
-
-    delete:
-        Delete user account.
-        
-        parameters: [pk]
+        parameters: [first_name, last_name,]
     """
 
     serializer_class = UserProfileSerializer
