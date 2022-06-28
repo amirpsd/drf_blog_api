@@ -12,31 +12,37 @@ from .managers import CustomUserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     phone_regex = RegexValidator(
-        regex=r"^989\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number.")
+        regex=r"^989\d{2}\s*?\d{3}\s*?\d{4}$", message=_("Invalid phone number."),
     )
     phone = models.CharField(
-        max_length=12, validators=[phone_regex], unique=True, verbose_name=_("phone")
+        max_length=12, validators=[phone_regex], 
+        unique=True, verbose_name=_("phone"),
     )
     first_name = models.CharField(
-        max_length=100, blank=True, verbose_name=_("first name")
+        max_length=100, blank=True, 
+        verbose_name=_("first name"),
     )
     last_name = models.CharField(
-        max_length=100, blank=True, verbose_name=_("last name")
+        max_length=100, blank=True, 
+        verbose_name=_("last name"),
     )
-    author = models.BooleanField(default=False, blank=True, verbose_name=_("author"))
+    author = models.BooleanField(
+        default=False, blank=True, 
+        verbose_name=_("author"),
+    )
     special_user = models.DateTimeField(
-        default=timezone.now, verbose_name=_("Special User")
+        default=timezone.now, verbose_name=_("Special User"),
     )
 
-    is_staff = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False,)
+    is_admin = models.BooleanField(default=False,)
 
     date_joined = models.DateTimeField(
-        default=timezone.now, verbose_name=_("date joined")
+        default=timezone.now, verbose_name=_("date joined"),
     )
     two_step_password = models.BooleanField(
-        default=False, verbose_name=_("two step password"),
-        help_text=_("is active two step password?"),
+        default=False, help_text=_("is active two step password?"),
+        verbose_name=_("two step password"),
     )
 
     objects = CustomUserManager()
