@@ -10,7 +10,11 @@ services:
     expose:
      - 8000
     depends_on:
-      - db     
+      - db
+    volumes:
+      - type : "bind"
+        source : './src/'
+        target : '/src'
     networks:
       - blog_network
       - nginx_network
@@ -48,6 +52,10 @@ services:
       - type : "bind"
         source : './src/media/'
         target : '/src/media'
+
+      - type : "bind"
+        source : './src/log/'
+        target : '/src/log'
 
     depends_on:
       - web
