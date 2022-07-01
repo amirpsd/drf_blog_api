@@ -1,0 +1,163 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-30 18:20-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\account\models.py:15
+msgid "Invalid phone number."
+msgstr "شماره تلفن نامعتبر است."
+
+#: .\account\models.py:19
+msgid "phone"
+msgstr "تلفن"
+
+#: .\account\models.py:23
+msgid "first name"
+msgstr "نام"
+
+#: .\account\models.py:27
+msgid "last name"
+msgstr "نام خانوادگی"
+
+#: .\account\models.py:31
+msgid "author"
+msgstr "نویسنده"
+
+#: .\account\models.py:34 .\account\models.py:63
+msgid "Special User"
+msgstr "کاربر ویژه"
+
+#: .\account\models.py:41
+msgid "date joined"
+msgstr "تاریخ پیوستن"
+
+#: .\account\models.py:44
+msgid "is active two step password?"
+msgstr "آیا رمز دو مرحله ای فعال است؟"
+
+#: .\account\models.py:45
+msgid "two step password"
+msgstr "رمز دومرحله ای"
+
+#: .\blog\models.py:24
+msgid "Author"
+msgstr "نویسنده"
+
+#: .\blog\models.py:29 .\blog\models.py:108
+msgid "Categories"
+msgstr "دسته بندی ها"
+
+#: .\blog\models.py:32 .\blog\models.py:92
+msgid "Title"
+msgstr "عنوان"
+
+#: .\blog\models.py:36 .\blog\models.py:96
+msgid "Do not fill in here"
+msgstr "این قسمت را پر نکنید"
+
+#: .\blog\models.py:36 .\blog\models.py:96
+msgid "Slug"
+msgstr "اسلاگ"
+
+#: .\blog\models.py:39
+msgid "Content"
+msgstr "محتوا"
+
+#: .\blog\models.py:43
+msgid "Image"
+msgstr "تصویر"
+
+#: .\blog\models.py:46
+msgid "Summary"
+msgstr "خلاصه"
+
+#: .\blog\models.py:50
+msgid "Likes"
+msgstr "لایک ها"
+
+#: .\blog\models.py:53
+msgid "Publish time"
+msgstr "تاریخ انتشار"
+
+#: .\blog\models.py:56 .\comment\models.py:34
+msgid "Create time"
+msgstr "تاریخ تولید"
+
+#: .\blog\models.py:59 .\comment\models.py:37
+msgid "Update time"
+msgstr "تاریخ بروزرسانی"
+
+#: .\blog\models.py:62
+msgid "Is special Blog ?"
+msgstr "مقاله ویژه؟"
+
+#: .\blog\models.py:66 .\blog\models.py:99
+msgid "Status"
+msgstr "وضعیت"
+
+#: .\blog\models.py:69
+msgid "Visits"
+msgstr "بازدید ها"
+
+#: .\blog\models.py:77
+msgid "Blog"
+msgstr "مقاله"
+
+#: .\blog\models.py:78
+msgid "Blogs"
+msgstr "مقالات"
+
+#: .\blog\models.py:88
+msgid "Subcategory"
+msgstr "زیردسته"
+
+#: .\blog\models.py:107
+msgid "Category"
+msgstr "دسته بندی"
+
+#: .\comment\models.py:15
+msgid "User"
+msgstr "کاربر"
+
+#: .\comment\models.py:19
+msgid "Name"
+msgstr "نام"
+
+#: .\comment\models.py:23
+msgid "content type"
+msgstr "نوع محتوا"
+
+#: .\comment\models.py:25
+msgid "object id"
+msgstr "آیدی آبجکت"
+
+#: .\comment\models.py:30
+msgid "parent"
+msgstr "والد"
+
+#: .\comment\models.py:32
+msgid "Body"
+msgstr "بدنه"
+
+#: .\comment\models.py:49
+msgid "Comment"
+msgstr "کامنت"
+
+#: .\comment\models.py:50
+msgid "Comments"
+msgstr "کامنت ها"
