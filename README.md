@@ -12,11 +12,14 @@ The purpose of this project was to see how a blog with **otp** authentication ca
 - Send otp code to user's phone.
 - Two-step verification for authentication.
 - Use cache to temporarily store otp code.
+- The presence of throttling in authentication.
 - Generate tokens using **simple-jwt** after authentication.
 - Production-ready configuration for Static Files, Database Settings, Gunicorn, Ngnix, Docker.
 - Easy installation.
 - Ability to comment on blogs.
+- Ability advanced filter of articles.
 - Use the PostgreSQL database to store data.
+- Existence of logger for debugging.
 
 
 ## Technologies used
@@ -55,9 +58,7 @@ and also install docker-compose.
 git clone https://github.com/amirpsd/drf_blog_api.git && cd drf_blog_api && cp .env-sample .env && cp .env.db-example .env.db && rm .env-sample .env.db-example
 ```
 
-![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+)
 Please enter the required information in the **.env** and **.env.db** files before running the project.
-
 
 **Run project**
 
