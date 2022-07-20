@@ -97,12 +97,12 @@ if config("DEBUG", cast=bool):
 else:
     DATABASES = {
         "default": {
-            "ENGINE": config("ENGINE"),
-            "NAME": config("NAME"),
-            "USER": config("USER"),
-            "PASSWORD": config("PASSWORD", default="1234"),
-            "HOST": "db",
-            "PORT": config("PORT"),
+            "ENGINE": config("DB_ENGINE"),
+            "NAME": config("DB_NAME"),
+            "USER": config("DB_USER"),
+            "PASSWORD": config("DB_PASSWORD", default="1234"),
+            "HOST": config("DB_HOST"),
+            "PORT": config("DB_PORT"),
             "CONN_MAX_AGE": 30,
         }
     }
