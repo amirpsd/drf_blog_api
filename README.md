@@ -55,7 +55,7 @@ and also install docker-compose.
 **Clone the project**
 
 ```shell
-git clone https://github.com/amirpsd/drf_blog_api.git && cd drf_blog_api && cp .env-sample .env && cp .env.db-example .env.db && rm .env-sample .env.db-example
+git clone https://github.com/amirpsd/drf_blog_api.git && cd drf_blog_api
 ```
 
 Please enter the required information in the **.env** and **.env.db** files before running the project.
