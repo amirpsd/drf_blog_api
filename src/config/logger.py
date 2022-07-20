@@ -7,7 +7,6 @@ DEBUG = config("DEBUG", cast=bool, default=True)
 min_level = "DEBUG" if DEBUG else "INFO"
 min_django_level = "INFO"
 
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -40,3 +39,9 @@ LOGGING = {
         }
     }
 }
+
+import sys
+import logging
+
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    logging.disable(logging.CRITICAL)
