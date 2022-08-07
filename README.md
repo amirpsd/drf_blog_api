@@ -20,6 +20,7 @@ The purpose of this project was to see how a blog with **otp** authentication ca
 - Ability advanced filter of articles.
 - Use the PostgreSQL database to store data.
 - Existence of logger for debugging.
+- Automated execution of unit tests with GitHub Actions.
 
 
 ## Technologies used
@@ -33,7 +34,7 @@ The purpose of this project was to see how a blog with **otp** authentication ca
 - [PostgreSQL](https://www.postgresql.org/) , Database.
 - [Gunicorn](https://gunicorn.org/) , WSGI HTTP Server.
 - [Git](https://git-scm.com/doc) , VCS(Version Control System).
-
+- [GitHub Actions](https://docs.github.com/en/actions) , CI/CD. 
 
 ## Requirements
 
