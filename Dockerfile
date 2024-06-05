@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -8,6 +8,10 @@ WORKDIR /src
 ADD ./src /src 
 
 # install dependencies
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc \
+    && pip install psycopg2
+
 RUN pip3 install --upgrade pip
 ADD ./requirements /requirements
 RUN pip3 install -r /requirements/production.txt
